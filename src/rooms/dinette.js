@@ -14,12 +14,10 @@ export function build(root) {
 
   // ---- posts at both ends of the mirror wall ----
   box(g, 0.16, 2.4, 0.16, olive, 6.8, 0, 1.1, { collide: true }); // P2: closet SE corner (kitchen side)
-  box(g, 0.16, 2.4, 0.16, olive, 5.3, 0, 1.6, { collide: true }); // P1: end of the short wing wall
-  // header beam from P1 over to the living/dinette beam
-  box(g, 0.7, 0.16, 0.14, olive, 4.95, 2.4 - 0.16, 1.6);
+  box(g, 0.16, 2.4 - 0.22, 0.16, olive, 4.6, 0, 1.5, { collide: true }); // P1: end of the wing wall, under the beam
 
   // ---- table + chairs ----
-  const cx = 5.2, cz = 2.2;
+  const cx = 5.3, cz = 2.2;
   glassTable(g, cx, cz, { r: 0.5 });
   // chairs set slightly off-axis, as in the photo
   retroChair(g, cx - 0.6, cz + 0.05, Math.PI / 2 + 0.15);
@@ -29,7 +27,7 @@ export function build(root) {
   stainedDrum(g, 5.6, 2.0, 2.4);
 
   // ---- wood-framed mirror with a vertical divider (on the mirror wall, faces south) ----
-  const mw = 0.95, mh = 0.68, mx = 6.12, my = 1.17;
+  const mw = 1.0, mh = 0.7, mx = 5.75, my = 1.17;
   const mm = new THREE.MeshStandardMaterial({ color: '#b9c4c4', roughness: 0.08, metalness: 0.9 });
   const glass = new THREE.Mesh(new THREE.PlaneGeometry(mw, mh), mm);
   glass.position.set(mx, my + mh / 2, wallZ + 0.02); g.add(glass);
@@ -45,7 +43,7 @@ export function build(root) {
   }
 
   // ---- carved red-wood whatnot shelf, left of the mirror ----
-  const sh = group(g, 5.5, wallZ, 0, 1.12);
+  const sh = group(g, 5.0, wallZ, 0, 1.12);
   box(sh, 0.07, 0.62, 0.02, redWood, 0, 0, 0.01, { shadow: false });
   for (let i = 0; i < 3; i++) {
     const w = 0.24 - i * 0.04;
@@ -54,7 +52,7 @@ export function build(root) {
     for (const s of [-1, 1]) box(sh, 0.03, 0.12, 0.02, redWood, s * (w / 2 - 0.02), 0.06 + i * 0.2 - 0.1, 0.03, { shadow: false });
   }
   const vase = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.035, 0.1, 10), color('#d8b25a', 0.5));
-  vase.position.set(5.5, 1.12 + 0.6 + 0.05, wallZ + 0.06); g.add(vase);
+  vase.position.set(5.0, 1.12 + 0.6 + 0.05, wallZ + 0.06); g.add(vase);
 
   // ---- decorative plaques ----
   const disc = (x, y, z, r, c, ry = 0, rim = '#b88a3a') => {
@@ -64,15 +62,15 @@ export function build(root) {
     const face = new THREE.Mesh(new THREE.CircleGeometry(r * 0.78, 28), color(c, 0.5)); face.position.z = 0.009; d.add(face);
   };
   // dark floral plaque on the wing wall (faces east)
-  disc(5.37, 1.88, 1.33, 0.11, '#2e3b2a', Math.PI / 2, '#3a2a1a');
+  disc(4.67, 1.85, 1.3, 0.11, '#2e3b2a', Math.PI / 2, '#3a2a1a');
   // round gilt plate on the kitchen-side post (faces south)
   disc(6.8, 1.68, 1.19, 0.11, '#d9cfa0');
   // small plaque above the shelf
-  disc(5.75, 1.95, wallZ + 0.01, 0.07, '#4a5f86', 0, '#3a2a1a');
+  disc(4.8, 1.75, wallZ + 0.01, 0.08, '#4a5f86', 0, '#3a2a1a');
 
   // light switches
-  box(g, 0.01, 0.12, 0.08, color('#f4f1e8', 0.6), 5.36, 1.12, 1.4, { shadow: false });
-  box(g, 0.08, 0.12, 0.01, color('#f4f1e8', 0.6), 5.95, 1.12, wallZ + 0.01, { shadow: false });
+  box(g, 0.01, 0.12, 0.08, color('#f4f1e8', 0.6), 4.66, 1.12, 1.3, { shadow: false });
+  box(g, 0.08, 0.12, 0.01, color('#f4f1e8', 0.6), 5.25, 1.12, wallZ + 0.01, { shadow: false });
   return g;
 }
 

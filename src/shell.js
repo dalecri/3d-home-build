@@ -48,25 +48,25 @@ export function buildShell(root) {
   wallX(g, 6.8, 9.6, 3.0, t, CEIL, { n: white, s: sage }, [OPEN.kitchenToDen]);
   // den / bath wall
   wallZ(g, 3.05, D - T, 8.2, t, CEIL, { w: sage, e: white }, [OPEN.bathDoor]);
-  // closet along the dinette's north side (x 5.3..6.8, z 0..1.1); its south face is the dinette
-  // "mirror wall" (photo 25); door faces the kitchen. A short wing wall + post (x 5.3, z 1.1..1.55)
-  // closes the west end of the mirror wall.
+  // closet along the dinette's north side (x 4.6..6.8, z 0..1.1); its south face is the dinette
+  // "mirror wall" (photos 25/26); door faces the kitchen. Its west wall continues as a short wing
+  // wall to the post at (4.6, 1.45) that ends the living/dinette beam.
   wallZ(g, T, 1.1, 6.8, t, CEIL, { w: sage, e: white }, [OPEN.closetDoor]);
-  wallX(g, 5.25, 6.85, 1.1, t, CEIL, { n: white, s: sage }, []);
-  wallZ(g, T, 1.55, 5.3, t, CEIL, { w: sage, e: sage }, []);
+  wallX(g, 4.55, 6.85, 1.1, t, CEIL, { n: white, s: sage }, []);
+  wallZ(g, T, 1.45, 4.6, t, CEIL, { w: sage, e: sage }, []);
 
   // ---- wainscoting ----
   // living + dinette + den (olive painted boards)
   wainscot(g, 'z', 3.05, D - T, T, 'e', OPEN.west);
   wainscot(g, 'x', T, 4.6, D - T, 'n', southOps.filter((o) => o.a < 4.6));
   wainscot(g, 'x', 4.6, 8.15, D - T, 'n', southOps.filter((o) => o.a > 4.6 && o.a < 8.2));
-  wainscot(g, 'x', 3.45, 5.25, T, 's', []);
+  wainscot(g, 'x', 3.45, 4.55, T, 's', []);
   wainscot(g, 'z', T, 3.0, 3.45, 'e', [OPEN.bedroomDoor]);
   wainscot(g, 'x', 6.8, 8.2, 3.05, 's', [OPEN.kitchenToDen]);
   wainscot(g, 'z', 3.05, D - T, 8.15, 'w', [OPEN.bathDoor]);
-  wainscot(g, 'z', T, 1.55, 5.25, 'w', []);
-  wainscot(g, 'z', 1.15, 1.55, 5.35, 'e', []);
-  wainscot(g, 'x', 5.35, 6.8, 1.15, 's', []);
+  wainscot(g, 'z', T, 1.45, 4.55, 'w', []);
+  wainscot(g, 'z', 1.15, 1.45, 4.65, 'e', []);
+  wainscot(g, 'x', 4.65, 6.8, 1.15, 's', []);
   // kitchen side (dark olive half-wall on the kitchen/den partition; photo 20 reads charcoal-olive)
   const kBoard = new THREE.MeshStandardMaterial({ map: tex('vboard', { base: '#4e5243', boards: 6 }), roughness: 0.65 }); kBoard.userData.tile = 0.9;
   const kOlive = color('#4f5346', 0.65);

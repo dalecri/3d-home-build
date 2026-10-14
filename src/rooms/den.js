@@ -79,17 +79,19 @@ export function build(root) {
   prism(g, body, 0, CEIL, [stone, stone]);
   addCollider(CX - RUNW - 0.12, CX, CZ - RUNE - 0.1, CZ, 0, 2);
 
-  // raised hearth: buff stone plinth with terracotta tile top, deepest in front of the insert
+  // raised hearth: buff stone step with a terracotta tile top across the full breast width
+  const HH = 0.27;
   const hearthPoly = [...offsetChain(face, [0.12, 0.42, 0.06]), [CX, CZ]];
-  prism(g, hearthPoly, 0, 0.2, [stone, stone]);
-  prism(g, hearthPoly.map(([x, z]) => [x, z]), 0.2, 0.225, [tile, tile], { shadow: false });
+  prism(g, hearthPoly, 0, HH - 0.025, [stone, stone]);
+  prism(g, hearthPoly, HH - 0.025, HH, [tile, tile], { shadow: false });
 
-  // stepped mantel shelves wrapping the chimney (lowest = deepest, with brackets)
-  for (const [y, p, th] of [[1.5, 0.2, 0.055], [1.8, 0.12, 0.045], [2.04, 0.09, 0.04]]) {
-    const poly = [...offsetChain(face, [p, p, p]).map(([x, z], i, a) =>
-      // let the ends run a little onto the walls like the photo
-      i === 0 ? [x - 0.08, z] : i === a.length - 1 ? [x, z - 0.08] : [x, z]), [CX, CZ]];
-    prism(g, poly, y, y + th, [wood, wood]);
+  // One deeper bracketed mantel just above the insert (on the 45-degree face only), then three
+  // thin terracotta ledges flush at the tops of the upper stone courses (top one a bit wider,
+  // like a corbel). Return offsets are 0 so nothing runs past the sides of the breast.
+  const MANTEL_Y = 1.3, MANTEL_T = 0.05;
+  prism(g, [...offsetChain(face, [0, 0.2, 0]), [CX, CZ]], MANTEL_Y, MANTEL_Y + MANTEL_T, [wood, wood]);
+  for (const [y, p] of [[1.6, 0.035], [1.84, 0.04], [2.08, 0.06]]) {
+    prism(g, [...offsetChain(face, [0, p, 0]), [CX, CZ]], y, y + 0.035, [wood, wood], { shadow: false });
   }
 
   // insert + brackets etc. on the 45-degree face: local frame, +z out of the face,
@@ -99,8 +101,9 @@ export function build(root) {
   const fp = group(g, mx, mz, -3 * Math.PI / 4);
   const black = mat('black'), brass = mat('brass');
   const XO = 0.2; // insert sits right of centre in both photos
-  const iw = 0.92, ib = 0.24, ih = 0.95;
-  box(fp, iw, ih, 0.08, black, XO, ib, 0.0); // surround (half recessed)
+  const iw = 0.9, ib = HH + 0.01, ih = 0.9;
+  const charcoal = color('#2a2626', 0.55, { metalness: 0.3 });
+  box(fp, iw, ih, 0.08, charcoal, XO, ib, 0.0); // surround (half recessed)
   // brass louvres top and bottom
   for (const yb of [ib + 0.05, ib + ih - 0.15]) {
     box(fp, iw - 0.12, 0.1, 0.02, color('#3a2a14', 0.6), XO, yb, 0.045, { shadow: false });
@@ -108,11 +111,20 @@ export function build(root) {
   }
   // door: black frame + dark glass with a faint ember glow
   const dy0 = ib + 0.19, dh = ih - 0.38;
-  box(fp, iw - 0.14, dh, 0.03, black, XO, dy0, 0.055);
+  box(fp, iw - 0.14, dh, 0.03, charcoal, XO, dy0, 0.055);
   box(fp, iw - 0.28, dh - 0.12, 0.01, color('#1b1310', 0.25, { emissive: '#5a1e08', emissiveIntensity: 0.35, metalness: 0.3 }), XO, dy0 + 0.06, 0.072, { shadow: false });
+  // arched top to the glass + thin vertical grille bars
+  const gw = iw - 0.28, arch = new THREE.Mesh(new THREE.RingGeometry(gw / 2 - 0.025, gw / 2, 24, 1, 0, Math.PI), charcoal);
+  arch.scale.y = 0.4; arch.position.set(XO, dy0 + dh - 0.06 - gw / 2 * 0.4, 0.079); fp.add(arch);
+  for (let k = 1; k < 6; k++) box(fp, 0.012, dh - 0.14, 0.01, charcoal, XO - gw / 2 + k * gw / 6, dy0 + 0.07, 0.08, { shadow: false });
   box(fp, 0.03, 0.18, 0.03, brass, XO + iw / 2 - 0.13, dy0 + dh / 2 - 0.09, 0.085, { shadow: false }); // handle
-  // mantel brackets under the lowest shelf, either side of the insert
-  for (const s of [-1, 1]) box(fp, 0.05, 0.2, 0.17, wood, XO + s * (iw / 2 + 0.06), 1.3, 0.085);
+  // two slim angled wood brackets under the mantel, about a quarter in from each side
+  for (const s of [-1, 1]) {
+    const bx = s * faceW / 4;
+    box(fp, 0.03, 0.2, 0.03, wood, bx, MANTEL_Y - 0.2, 0.015, { shadow: false });
+    const brace = box(fp, 0.03, 0.25, 0.025, wood, bx, MANTEL_Y - 0.225, 0.105, { shadow: false });
+    brace.rotation.x = 0.64;
+  }
   // round plaster medallion near the top
   const med = cyl(fp, 0.09, 0.09, 0.025, color('#e6d8bd', 0.8), 0, 0, 0, 20);
   med.rotation.x = Math.PI / 2; med.position.set(-0.15, 2.24, 0.012);
@@ -120,14 +132,13 @@ export function build(root) {
   // grille vent high on the west-facing return
   box(g, 0.02, 0.14, 0.24, color('#d9d4c6', 0.6), CX - RUNW - 0.01, 2.12, CZ - RETW / 2, { shadow: false });
 
-  // small plants / ornaments on the shelves (local frame; mantel top 1.555, shelf 2 top 1.845)
-  plant(fp, faceW / 2 - 0.12, 1.555, 0.1, { s: 0.55, pot: '#b8643a' }); // terracotta pot, slider end
-  plant(fp, -faceW / 2 + 0.25, 1.555, 0.1, { s: 0.45, pot: '#3d5a32' }); // left end
-  plant(fp, -faceW / 2 + 0.35, 1.845, 0.06, { s: 0.38, pot: '#2f2f2f' });
-  box(fp, 0.16, 0.05, 0.07, brass, 0.05, 1.555, 0.1); // little brass dish
+  // small plants / ornaments on the mantel (local frame)
+  const MT = MANTEL_Y + MANTEL_T;
+  plant(fp, faceW / 2 - 0.14, MT, 0.1, { s: 0.55, pot: '#b8643a' }); // terracotta pot, slider end
+  plant(fp, -faceW / 2 + 0.2, MT, 0.1, { s: 0.45, pot: '#3d5a32' }); // left end
+  box(fp, 0.16, 0.05, 0.07, brass, 0.1, MT, 0.1); // little brass dish
   const pig = new THREE.Mesh(new THREE.SphereGeometry(0.05, 10, 8), color('#e7b9a8', 0.6));
-  pig.scale.set(1.3, 1, 1); pig.position.set(-faceW / 2 + 0.15, 1.895, 0.06); fp.add(pig); // piggy figurine
-  plant(g, CX - RUNW - 0.1, 1.845, CZ - RETW / 2, { s: 0.35, pot: '#c26d3c' }); // on the return
+  pig.scale.set(1.3, 1, 1); pig.position.set(-faceW / 2 + 0.42, MT + 0.05, 0.1); fp.add(pig); // piggy figurine
 
   // fireplace tool stand right of the hearth
   const tx = CX - RUNW - 0.22, tz = CZ - RETW - 0.15;
