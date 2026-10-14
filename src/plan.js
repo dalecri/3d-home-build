@@ -53,14 +53,14 @@ export const VIEWS = {
   'living-east': { label: 'Living room → fireplace (photo 28)', pos: [0.95, 1.15, 3.85], look: [5.3, 0.8, 6.2], fov: 68 },
   'living-west': { label: 'Living room → sofa (photo 26)', pos: [6.6, 1.35, 3.9], look: [1.82, 1.09, 2.44], fov: 70 },
   kitchen: { label: 'Kitchen → fireplace (photo 20)', pos: [8.30, 1.20, 0.60], look: [7.26, 1.20, 6.51], fov: 72 },
-  dinette: { label: 'Dinette (photo 25)', pos: [6.75, 1.28, 4.3], look: [6.2, 1.0, 0.4], fov: 66 },
+  dinette: { label: 'Dinette (photo 25)', pos: [6.75, 1.28, 4.3], look: [5.55, 1.0, 0.45], fov: 66 },
   bedroom: { label: 'Bedroom (photo 30)', pos: [3.08, 1.22, 2.71], look: [0.63, 0.95, 1.0], fov: 60 },
   // exterior vantage points
   // ground: true => y values are heights above the terrain at that point
   front: { label: 'Front from the driveway (photo 1)', pos: [7.2, 1.5, -12.8], look: [6.4, 1.6, 0], fov: 58, ground: true },
-  balcony: { label: 'Lake-side balcony (photo 15)', pos: [-1.6, 1.3, 6.5], look: [6.0, 0.6, 8.6], fov: 66 },
+  balcony: { label: 'Lake-side balcony (photo 15)', pos: [-1.6, 1.3, 6.5], look: [6.0, 0.5, 9.2], fov: 66 },
   patio: { label: 'Patio & fire pit (photo 12)', pos: [10.1, 1.5, -5.5], look: [17.5, 0.4, -4.4], fov: 62, ground: true },
   chalet: { label: 'Guest chalet (photo 10)', pos: [-0.1, 1.4, -6.8], look: [-0.5, 1.5, -14.5], fov: 60, ground: true },
-  shed: { label: 'Shed (photo 11)', pos: [-21.5, 1.4, 15.5], look: [-14, 1.0, 19.5], fov: 60, ground: true },
-  aerial: { label: 'Aerial (lot overview)', pos: [-15, 45, -74], look: [6, -3, 8], fov: 50 },
+  shed: { label: 'Shed (photo 11)', pos: [-19.9, 1.4, 16.4], look: [-14, 1.1, 19.5], fov: 60, ground: true },
+  aerial: { label: 'Aerial (lot overview)', pos: [-8, 95, -62], look: [6, -3, 4], fov: 50 },
 };

@@ -219,9 +219,9 @@ function buildRoof(g) {
   box(g, 0.6, 0.06, 0.6, color('#222', 0.5), 7.9, y0 + 1.7, 3.2);
   cylFlue(g, 9.4, 1.5);
   const alu = color('#cfd2d4', 0.4, { metalness: 0.5 }), dark = color('#3a3c3e', 0.5, { metalness: 0.5 });
-  const dish = new THREE.Group(); dish.position.set(4.7, y0 + 1.25, 1.9); g.add(dish);
+  const dish = new THREE.Group(); dish.position.set(3.85, y0 + 1.2, 2.0); g.add(dish);
   const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.9, 8), dark); pole.position.y = 0.2; dish.add(pole);
-  const bowl = new THREE.Mesh(new THREE.SphereGeometry(0.42, 20, 8, 0, Math.PI * 2, 0, 0.62), alu);
+  const bowl = new THREE.Mesh(new THREE.SphereGeometry(0.5, 20, 8, 0, Math.PI * 2, 0, 0.62), alu);
   bowl.material.side = THREE.DoubleSide; bowl.rotation.x = Math.PI / 2 + 0.55; bowl.position.set(0, 0.72, 0.05); bowl.scale.set(1, 1, 1.25); bowl.castShadow = true; dish.add(bowl);
   const arm = new THREE.Mesh(new THREE.BoxGeometry(0.025, 0.025, 0.55), dark); arm.position.set(0, 0.62, 0.32); arm.rotation.x = -0.5; dish.add(arm);
   const lnb = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.07, 0.12), dark); lnb.position.set(0, 0.5, 0.56); dish.add(lnb);

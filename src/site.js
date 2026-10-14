@@ -27,7 +27,7 @@ export function driveX(z) { return 6.6 + Math.sin(z / 6) * 1.1; }
 const CHALET = { x: -0.5, z: -14.5 };
 const PATIO = { x: 17, z: -4.5, ry: -1.72 };
 const SHED = { x: -14, z: 19.5, ry: 1.08 };
-const PAD = { x: 7.2, z: -6.2, r: 3.6 }; // gravel turnaround in front of the porch
+const PAD = { x: 6.9, z: -7.0, r: 2.9 }; // gravel turnaround in front of the porch
 
 // Ground height. Flat-ish clearing around the house at y ~ -0.6 (house floor sits ~0.6 m up on
 // the road side); a steep bank drops away behind the lake-side deck, then the lot slopes to the water.
@@ -206,10 +206,10 @@ function crab(S, x, z, h = 5.5, o = {}) {
   const y = groundY(x, z), s = x + z * 5;
   S.add('trunk', 'bark', x, y, z, 0.2, h * 0.4, 0.2, '#4a3a30', o);
   for (const [bx, bz] of [[0.6, 0.2], [-0.5, 0.5], [0.1, -0.6]]) S.add('trunk', 'bark', x + bx * 0.3, y + h * 0.33, z + bz * 0.3, 0.08, h * 0.35, 0.08, '#4a3a30', { ...o, rx: bz * 0.9, rz: -bx * 0.9 });
-  for (let i = 0; i < 22; i++) {
-    const a = i * 2.39 + s, d = Math.sqrt(hash(s, i)) * h * 0.42, sc = 0.55 + hash(i, s) * 0.55;
+  for (let i = 0; i < 46; i++) {
+    const a = i * 2.39 + s, d = Math.sqrt(hash(s, i)) * h * 0.45, sc = 0.36 + hash(i, s) * 0.42;
     const yy = h * 0.42 + hash(s + i, 1) * h * 0.5 - d * 0.25;
-    const pink = hash(i, 9 + s) < 0.82;
+    const pink = hash(i, 9 + s) < 0.86;
     S.add('ico1', 'leaf', x + Math.cos(a) * d, y + yy, z + Math.sin(a) * d, sc * 1.2, sc, sc * 1.2, pink ? jit(['#d4569a', '#e27db4', '#c2367e'][i % 3], 0.15, s + i) : jit('#6a9a40', 0.2, i), o);
   }
 }
@@ -312,7 +312,7 @@ function buildWater(g) {
   for (let j = 0; j <= NZ; j++) for (let i = 0; i <= NX; i++) {
     const x = -420 + 840 * i / NX, z = 96 + 160 * Math.pow(j / NZ, 1.4);
     const edge = 100 + Math.sin(x / 23) * 6 + Math.sin(x / 9) * 2;
-    const hill = 14 + vnoise(x * 0.012, 3) * 34 + vnoise(x * 0.04, z * 0.04) * 8;
+    const hill = 10 + vnoise(x * 0.012, 3) * 22 + vnoise(x * 0.04, z * 0.04) * 6;
     const y = LAKE_Y - 1.5 + smooth(edge - 2, edge + 45, z) * hill + (z > edge ? 1.5 : 0);
     pos.push(x, y, z);
     c.copy(dark).lerp(lite, vnoise(x * 0.08, z * 0.08)); if (z < edge + 3) c.lerp(rock, 0.5);
@@ -401,7 +401,7 @@ function buildFrontYard(g, S) {
     m.position.set(x, groundY(x, z) + 0.04, z); m.rotation.y = i; m.scale.set(1.2, 1, 0.9); m.receiveShadow = true; g.add(m); walkables.push(m);
   });
   // a few clumps of lawn weeds / young shrubs at the clearing edges
-  for (const [x, z, r] of [[-3, -3.5, 1.2], [14.6, -2.4, 1.1], [13.8, -0.5, 0.9], [-4, 1.5, 1.0]]) shrub(S, x, z, r, '#5a8f3a', { n: 5 });
+  for (const [x, z, r] of [[-3, -3.5, 1.2], [-4, 1.5, 1.0]]) shrub(S, x, z, r, '#5a8f3a', { n: 5 });
 }
 
 // ---------- guest chalet (photo 10) ----------
@@ -493,15 +493,15 @@ function buildChalet(root, S) {
   // setting: birches, spruces, young maples hugging the cabin; lily-of-the-valley ground cover
   birch(S, cx - 3.2, cz - 2.2, 16); birch(S, cx - 2.2, cz - 4.0, 13); birch(S, cx + 3.0, cz - 1.0, 14);
   spruce(S, cx - 5.2, cz - 5.5, 19); spruce(S, cx + 1.5, cz - 6.5, 21); spruce(S, cx + 7.5, cz - 7, 18);
-  maple(S, cx + 3.4, cz + 1.2, 7); maple(S, cx - 4.6, cz + 0.2, 6.5); maple(S, cx - 1.2, cz - 6.0, 12);
+  maple(S, cx + 3.6, cz - 0.6, 6); maple(S, cx - 4.8, cz - 1.0, 5.5); maple(S, cx - 1.2, cz - 6.0, 12);
   pine(S, cx - 8, cz - 2, 22);
-  for (let i = 0; i < 260; i++) {
+  for (let i = 0; i < 520; i++) {
     const a = hash(i, 41) * 6.283, r = 1.6 + Math.sqrt(hash(i, 42)) * 7;
     const x = cx + Math.cos(a) * r * 1.2, z = cz + 0.5 + Math.sin(a) * r;
     if (z > cz + 2.6 && Math.abs(x - cx) < 2.4) continue; // keep the deck approach mown
     if (Math.abs(x - driveX(z)) < 2.4) continue;
-    const sc = 0.22 + hash(i, 43) * 0.18;
-    S.add('ico0', 'leaf', x, groundY(x, z) + sc * 0.3, z, sc * 1.3, sc * 0.7, sc * 1.3, jit('#3f7d2e', 0.35, i), { noShadow: true, ry: i });
+    const sc = 0.13 + hash(i, 43) * 0.12;
+    S.add('ico1', 'leaf', x, groundY(x, z) + sc * 0.35, z, sc * 1.3, sc * 0.8, sc * 1.3, jit(i % 3 ? '#3f7d2e' : '#4f9238', 0.35, i), { noShadow: true, ry: i });
   }
 }
 
@@ -548,13 +548,13 @@ function buildShed(root, S) {
   const vineCols = ['#7b5a3e', '#8e6a48', '#6b4a32', '#a07c58', '#5a3e2a', '#94704c'];
   let k = 0;
   const put = (lx, ly, lz, sc) => { const [x, yy, z] = W(lx, ly, lz); S.add('dodec', 'leaf', x, yy, z, sc, sc * 0.8, sc, jit(vineCols[k % 6], 0.3, k), { ry: k * 1.7, rx: k, noShadow: k % 3 !== 0 }); k++; };
-  for (let i = 0; i < 520; i++) {
-    const r1 = hash(i, 71), r2 = hash(i, 72), r3 = hash(i, 73), side = i % 4;
-    const sc = 0.14 + r3 * 0.2;
+  for (let i = 0; i < 1500; i++) {
+    const r1 = hash(i, 71), r2 = hash(i, 72), r3 = hash(i, 73), side = i % 5 < 2 ? 0 : i % 5 < 4 ? 1 : 2;
+    const sc = 0.07 + r3 * 0.13;
     let lx, ly, lz;
     if (side === 0 || side === 3) { // front face, heavier towards the left (local +x) and top
-      lx = -w / 2 - 0.1 + r1 * (w + 0.2); ly = Math.pow(r2, 0.6) * (top + 0.25); lz = fz - 0.06 - r3 * 0.14;
-      if (Math.abs(lx) < 0.62 && ly < 2.35) continue; // door
+      lx = -w / 2 - 0.12 + r1 * (w + 0.24); ly = Math.pow(r2, 0.7) * (top + 0.5); lz = fz - 0.05 - hash(i, 76) * 0.16;
+      if (Math.abs(lx) < 0.5 && ly < 2.2) continue; // door
       if (lx > 0.65 && ly < 0.45) continue; // let the lattice show at lower left
       if (ly > top) lx *= 1 - (ly - top) * 1.2;
     } else if (side === 1) { lx = (r1 < 0.5 ? -1 : 1) * (w / 2 + 0.07 + r3 * 0.1); lz = -d / 2 + r2 * d; ly = r2 * 0.4 + hash(i, 74) * (top + 0.1); if (lx > 0 && ly < 0.45) continue; }
@@ -602,7 +602,7 @@ function buildPatio(root, S) {
     const lx = i * 0.63, lz = j * 0.63, rr = 3.1 + (vnoise(i * 0.7 + 3, j * 0.7) - 0.5) * 1.2;
     if (Math.hypot(lx * 0.92, lz) > rr) continue;
     const [x, z] = W(lx, lz);
-    S.add('cube', 'stone', x, groundY(x, z) - 0.03, z, 0.6, 0.08 + hash(i, j) * 0.02, 0.6, jit('#9d9b94', 0.18, i * 13 + j), { ry: ry + (hash(j, i) - 0.5) * 0.04, noShadow: true });
+    S.add('cube', 'stone', x, groundY(x, z) - 0.03, z, 0.6, 0.08 + hash(i, j) * 0.02, 0.6, jit('#86847e', 0.2, i * 13 + j), { ry: ry + (hash(j, i) - 0.5) * 0.04, noShadow: true });
   }
   // rusted lattice fire pit with pyramidal screen lid
   const ft = fireTex(), rust = cmat({ map: ft, alphaTest: 0.5, side: THREE.DoubleSide, roughness: 0.7, metalness: 0.3 }, 0.8);
@@ -611,12 +611,12 @@ function buildPatio(root, S) {
   for (const [px, pz] of [[0.4, 0.4], [-0.4, 0.4], [0.4, -0.4], [-0.4, -0.4]]) box(fp, 0.05, 0.48, 0.05, color('#6e3518', 0.6, { metalness: 0.3 }), px, 0, pz);
   box(fp, 0.86, 0.04, 0.86, color('#6e3518', 0.6, { metalness: 0.3 }), 0, 0.46, 0);
   box(fp, 0.7, 0.18, 0.7, color('#2a2420', 1), 0, 0.05, 0, { shadow: false });
-  const lid = new THREE.Mesh(new THREE.ConeGeometry(0.6, 0.45, 4, 1, true), cmat({ color: '#3a2a22', transparent: true, opacity: 0.6, side: THREE.DoubleSide, roughness: 0.8 }));
-  lid.rotation.y = Math.PI / 4; lid.position.y = 0.72; fp.add(lid);
-  for (let i = 0; i < 4; i++) { const e = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.62, 0.03), color('#7a3d1c', 0.6, { metalness: 0.3 })); const a = i * Math.PI / 2; e.position.set(Math.cos(a) * 0.3, 0.71, Math.sin(a) * 0.3); e.rotation.set(Math.sin(a) * 0.93, 0, -Math.cos(a) * 0.93); fp.add(e); }
+  const lidG = new THREE.ConeGeometry(0.6, 0.42, 4, 1, true); lidG.attributes.uv.array.forEach((v, i, a) => { a[i] = v * 3; });
+  const lid = new THREE.Mesh(lidG, cmat({ map: ft, alphaTest: 0.5, side: THREE.DoubleSide, roughness: 0.7, metalness: 0.3 }));
+  lid.rotation.y = Math.PI / 4; lid.position.y = 0.71; lid.castShadow = true; fp.add(lid);
   cyl(fp, 0.04, 0.04, 0.08, color('#7a3d1c', 0.6), 0, 0.94, 0, 8);
   // old outdoor fireplace / barbecue (stone + concrete) with a tall stovepipe
-  const stone = mat('stone');
+  const stone = cmat({ map: tex('stone'), color: '#a3a4a2', roughness: 0.95 }, 1.1);
   box(g, 1.25, 0.95, 0.9, stone, -0.5, 0, -2.6, { collide: false });
   box(g, 0.7, 0.42, 0.05, color('#1c1a18', 1), -0.5, 0.3, -2.13, { shadow: false });
   box(g, 1.4, 0.1, 1.0, color('#8d8b84', 0.9), -0.5, 0.95, -2.6);
@@ -649,7 +649,7 @@ function buildPatio(root, S) {
 
 // ---------- forest ----------
 function buildForest(S) {
-  const views = [[7.5, -14, 7, -2], [10.1, -5.5, 17, -4.5], [-0.2, -7, -0.5, -14.5], [-21.5, 15.5, -14, 19.5]];
+  const views = [[7.5, -14, 7, -2], [10.1, -5.5, 17, -4.5], [-0.2, -7, -0.5, -14.5], [-19.9, 16.4, -14, 19.5]];
   const segDist = (x, z, [ax, az, bx, bz]) => {
     const vx = bx - ax, vz = bz - az, t = Math.max(0, Math.min(1, ((x - ax) * vx + (z - az) * vz) / (vx * vx + vz * vz)));
     return Math.hypot(x - ax - vx * t, z - az - vz * t);
@@ -695,7 +695,7 @@ function buildForest(S) {
     ({ spruce, pine, birch, maple })[k](S, x, z, h);
   }
   // a few eye-level leafy branches just past the rail
-  for (const [x, z, r] of [[1.5, 10.2, 1.4], [5.5, 10.5, 1.6], [9.5, 10.0, 1.3], [-2.6, 10.4, 1.5]]) {
+  for (const [x, z, r] of [[-2.6, 10.4, 1.5], [11.5, 9.8, 1.4]]) {
     const y = -0.4 + hash(x, z) * 1.2;
     for (let i = 0; i < 3; i++) S.add('ico1', 'leaf', x + i * 0.7 - 0.7, y + hash(i, x) * 0.6, z + hash(x, i) * 0.6, r * 0.8, r * 0.6, r * 0.8, jit(i % 2 ? '#6aa040' : '#7fb24a', 0.3, x + i));
   }
