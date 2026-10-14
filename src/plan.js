@@ -38,7 +38,7 @@ export const OPEN = {
   ],
   // kitchen east wall (to the screened porch) x = 9.6
   kitchenEast: [
-    { id: 'sinkWin', a: 1.0, b: 2.3, y0: 1.15, y1: 2.05, type: 'window' },
+    { id: 'sinkWin', a: 1.2, b: 2.3, y0: 1.15, y1: 2.05, type: 'window' },
     { id: 'porchWin', a: 2.42, b: 2.88, y0: 1.15, y1: 2.05, type: 'window' }, // photo 20: glass beyond the valance window, no door
   ],
   bedroomDoor: { a: 2.05, b: 2.85, y0: 0, y1: 2.05 }, // on x = 3.4 wall
@@ -52,8 +52,8 @@ export const OPEN = {
 export const VIEWS = {
   'living-east': { label: 'Living room → fireplace (photo 28)', pos: [0.95, 1.15, 3.85], look: [5.3, 0.8, 6.2], fov: 68 },
   'living-west': { label: 'Living room → sofa (photo 26)', pos: [6.6, 1.35, 3.9], look: [1.82, 1.09, 2.44], fov: 70 },
-  kitchen: { label: 'Kitchen → fireplace (photo 20)', pos: [8.30, 1.20, 0.60], look: [7.26, 1.20, 6.51], fov: 72 },
-  dinette: { label: 'Dinette (photo 25)', pos: [6.75, 1.28, 4.3], look: [5.55, 1.0, 0.45], fov: 66 },
+  kitchen: { label: 'Kitchen → fireplace (photo 20)', pos: [8.40, 1.25, 1.15], look: [7.36, 1.25, 7.06], fov: 76 },
+  dinette: { label: 'Dinette (photo 25)', pos: [6.78, 1.28, 4.65], look: [5.6, 1.0, 0.75], fov: 66 },
   bedroom: { label: 'Bedroom (photo 30)', pos: [3.08, 1.22, 2.71], look: [0.63, 0.95, 1.0], fov: 60 },
   // exterior vantage points
   // ground: true => y values are heights above the terrain at that point

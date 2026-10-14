@@ -80,7 +80,7 @@ export function build(root) {
 // cream rear) with a handle slot, tubular chrome legs running up the back sides.
 function retroChair(parent, x, z, ry) {
   const g = group(parent, x, z, ry);
-  const coral = color('#e8866a', 0.45), cream = color('#e9e0c6', 0.55), chrome = mat('chrome');
+  const coral = color('#e8866a', 0.45), cream = color('#e0d2ae', 0.6), chrome = mat('chrome');
   box(g, 0.44, 0.06, 0.42, coral, 0, 0.44, 0.02);
   box(g, 0.46, 0.03, 0.44, cream, 0, 0.42, 0.02, { shadow: false });
   // back outline: wider at the top, rounded corners, slot near the top

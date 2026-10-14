@@ -59,14 +59,14 @@ export function build(root) {
 
   // ---- window valance: gathered cream sheer across the top of the sink window ----
   const sheer = color('#f3f1dc', 0.95, { side: THREE.DoubleSide });
-  box(g, 0.02, 0.02, 1.45, mat('chrome'), 9.5, 2.07, 1.65, { shadow: false }); // rod
-  for (let z = 0.95; z < 2.36; z += 0.06) {
+  box(g, 0.02, 0.02, 1.25, mat('chrome'), 9.5, 2.07, 1.75, { shadow: false }); // rod
+  for (let z = 1.15; z < 2.36; z += 0.06) {
     const h = 0.4 + 0.07 * Math.sin(z * 11);
     const pleat = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.04, h, 6, 1, true), sheer);
     pleat.position.set(9.47, 2.09 - h / 2, z); g.add(pleat);
   }
   // café curtain tier, short, at the near end only (photo 20 shows it at the left edge)
-  for (let z = 0.95; z < 1.4; z += 0.06) {
+  for (let z = 1.15; z < 1.5; z += 0.06) {
     const pleat = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.035, 0.5, 6, 1, true), sheer);
     pleat.position.set(9.48, 1.4, z); g.add(pleat);
   }
@@ -85,7 +85,7 @@ export function build(root) {
   for (let i = 0; i < 3; i++) box(g, 0.13, 0.03, 0.03, color('#e2b23a', 0.6), ix - 0.03 + i * 0.03, 1.06, iz - 0.12, { shadow: false }).rotation.y = 0.6 - i * 0.3;
 
   // ---- fridge against the west side (faces east), sage uppers above ----
-  const frX = 7.24, frZ = 1.41;
+  const frX = 7.24, frZ = 1.35;
   box(g, 0.72, 1.72, 0.75, mat('appliance'), frX, 0.02, frZ, { collide: true });
   box(g, 0.012, 0.012, 0.74, color('#cfcfcd', 0.5), frX + 0.36, 1.18, frZ, { shadow: false }); // freezer seam
   box(g, 0.03, 0.4, 0.025, color('#d8d8d6', 0.3), frX + 0.38, 1.3, frZ - 0.3, { shadow: false });
