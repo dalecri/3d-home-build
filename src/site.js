@@ -104,6 +104,26 @@ const fireTex = () => ctex('firepit', 128, 128, (c, w, h) => {
   }
   c.globalCompositeOperation = 'source-over';
 });
+// dead Virginia-creeper mat: tangled stems + dry leaves, ragged transparent edges (non-repeating)
+const vineTex = (seed) => ctex('vine' + seed, 256, 256, (c, w, h) => {
+  const r = rnd(seed); c.clearRect(0, 0, w, h);
+  const inside = (x, y) => { const ex = Math.min(x, w - x) / w, ey = Math.min(y, h - y) / h; return Math.min(ex, ey) * 6 + (r() - 0.5) * 0.9 > 0.15; };
+  for (let i = 0; i < 260; i++) {
+    let x = r() * w, y = r() * h; c.strokeStyle = ['#4a3424', '#5e4430', '#6d5440', '#3a2a1e'][i % 4]; c.lineWidth = 0.8 + r() * 1.8;
+    c.beginPath(); c.moveTo(x, y);
+    for (let k = 0; k < 4; k++) { const nx = x + (r() - 0.5) * 70, ny = y + (r() - 0.5) * 70; c.quadraticCurveTo(x + (r() - 0.5) * 40, y + (r() - 0.5) * 40, nx, ny); x = nx; y = ny; }
+    c.stroke();
+  }
+  for (let i = 0; i < 2600; i++) {
+    const x = r() * w, y = r() * h; if (!inside(x, y)) continue;
+    c.fillStyle = ['#8a6644', '#a07a52', '#6e5036', '#b08a5e', '#5a4030', '#977452'][i % 6];
+    c.beginPath(); c.ellipse(x, y, 2 + r() * 4, 1.5 + r() * 3, r() * 3, 0, 7); c.fill();
+  }
+  c.globalCompositeOperation = 'destination-in';
+  const g = c.createRadialGradient(w / 2, h / 2, w * 0.3, w / 2, h / 2, w * 0.62);
+  g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.fillRect(0, 0, w, h);
+  c.globalCompositeOperation = 'source-over';
+}, false);
 const wireTex = () => ctex('wire', 64, 64, (c, w, h) => {
   c.clearRect(0, 0, w, h); c.strokeStyle = 'rgba(70,72,70,0.95)'; c.lineWidth = 3;
   c.strokeRect(1.5, 1.5, w - 3, h - 3);
@@ -206,8 +226,8 @@ function crab(S, x, z, h = 5.5, o = {}) {
   const y = groundY(x, z), s = x + z * 5;
   S.add('trunk', 'bark', x, y, z, 0.2, h * 0.4, 0.2, '#4a3a30', o);
   for (const [bx, bz] of [[0.6, 0.2], [-0.5, 0.5], [0.1, -0.6]]) S.add('trunk', 'bark', x + bx * 0.3, y + h * 0.33, z + bz * 0.3, 0.08, h * 0.35, 0.08, '#4a3a30', { ...o, rx: bz * 0.9, rz: -bx * 0.9 });
-  for (let i = 0; i < 46; i++) {
-    const a = i * 2.39 + s, d = Math.sqrt(hash(s, i)) * h * 0.45, sc = 0.36 + hash(i, s) * 0.42;
+  for (let i = 0; i < 80; i++) {
+    const a = i * 2.39 + s, d = Math.sqrt(hash(s, i)) * h * 0.45, sc = 0.26 + hash(i, s) * 0.3;
     const yy = h * 0.42 + hash(s + i, 1) * h * 0.5 - d * 0.25;
     const pink = hash(i, 9 + s) < 0.86;
     S.add('ico1', 'leaf', x + Math.cos(a) * d, y + yy, z + Math.sin(a) * d, sc * 1.2, sc, sc * 1.2, pink ? jit(['#d4569a', '#e27db4', '#c2367e'][i % 3], 0.15, s + i) : jit('#6a9a40', 0.2, i), o);
@@ -548,9 +568,21 @@ function buildShed(root, S) {
   const vineCols = ['#7b5a3e', '#8e6a48', '#6b4a32', '#a07c58', '#5a3e2a', '#94704c'];
   let k = 0;
   const put = (lx, ly, lz, sc) => { const [x, yy, z] = W(lx, ly, lz); S.add('dodec', 'leaf', x, yy, z, sc, sc * 0.8, sc, jit(vineCols[k % 6], 0.3, k), { ry: k * 1.7, rx: k, noShadow: k % 3 !== 0 }); k++; };
-  for (let i = 0; i < 1500; i++) {
+  const sheet = (seed, wd, ht, lx, ly, lz, rotY = 0, roofTilt = null) => {
+    const geo = new THREE.PlaneGeometry(wd, ht); if (roofTilt !== null) geo.rotateX(-Math.PI / 2);
+    const m = new THREE.Mesh(geo, cmat({ map: vineTex(seed), alphaTest: 0.35, side: THREE.DoubleSide, roughness: 0.95 }));
+    m.position.set(lx, ly, lz); if (roofTilt !== null) m.rotation.z = roofTilt; else m.rotation.y = rotY; m.castShadow = true; g.add(m);
+  };
+  for (const [k, off] of [[0, 0.05], [1, 0.12]]) {
+    sheet(3 + k, 1.25, top + 0.9, -(w / 2 + 0.05) + 0.62 - k * 0.1, (top + 0.9) / 2 - 0.1, fz - off, Math.PI); // front, viewer's right
+    sheet(5 + k, 1.25, top + 0.4, (w / 2 + 0.05) - 0.62 + k * 0.1, (top + 0.4) / 2 + 0.35, fz - off, Math.PI); // front, viewer's left (lattice shows below)
+    sheet(7 + k, 1.9, 1.1, 0, top + rise * 0.55, fz - off - 0.02, Math.PI); // gable + over the door
+    for (const sd of [-1, 1]) sheet(9 + k + sd, d + 0.5, top + 0.6, sd * (w / 2 + off), (top + 0.6) / 2 - 0.1, 0, sd * Math.PI / 2);
+    for (const sd of [-1, 1]) sheet(13 + k + sd, L * 0.7, d * 0.8, sd * (w / 2 + ov) * 0.62, top + rise * 0.38 + 0.06 + off * 0.5, -d * 0.12, 0, -sd * pitch);
+  }
+  for (let i = 0; i < 700; i++) {
     const r1 = hash(i, 71), r2 = hash(i, 72), r3 = hash(i, 73), side = i % 5 < 2 ? 0 : i % 5 < 4 ? 1 : 2;
-    const sc = 0.07 + r3 * 0.13;
+    const sc = 0.05 + r3 * 0.09;
     let lx, ly, lz;
     if (side === 0 || side === 3) { // front face, heavier towards the left (local +x) and top
       lx = -w / 2 - 0.12 + r1 * (w + 0.24); ly = Math.pow(r2, 0.7) * (top + 0.5); lz = fz - 0.05 - hash(i, 76) * 0.16;
@@ -602,7 +634,7 @@ function buildPatio(root, S) {
     const lx = i * 0.63, lz = j * 0.63, rr = 3.1 + (vnoise(i * 0.7 + 3, j * 0.7) - 0.5) * 1.2;
     if (Math.hypot(lx * 0.92, lz) > rr) continue;
     const [x, z] = W(lx, lz);
-    S.add('cube', 'stone', x, groundY(x, z) - 0.03, z, 0.6, 0.08 + hash(i, j) * 0.02, 0.6, jit('#86847e', 0.2, i * 13 + j), { ry: ry + (hash(j, i) - 0.5) * 0.04, noShadow: true });
+    S.add('cube', 'stone', x, groundY(x, z) - 0.03, z, 0.6, 0.08 + hash(i, j) * 0.02, 0.6, jit('#72706b', 0.2, i * 13 + j), { ry: ry + (hash(j, i) - 0.5) * 0.04, noShadow: true });
   }
   // rusted lattice fire pit with pyramidal screen lid
   const ft = fireTex(), rust = cmat({ map: ft, alphaTest: 0.5, side: THREE.DoubleSide, roughness: 0.7, metalness: 0.3 }, 0.8);
@@ -616,7 +648,7 @@ function buildPatio(root, S) {
   lid.rotation.y = Math.PI / 4; lid.position.y = 0.71; lid.castShadow = true; fp.add(lid);
   cyl(fp, 0.04, 0.04, 0.08, color('#7a3d1c', 0.6), 0, 0.94, 0, 8);
   // old outdoor fireplace / barbecue (stone + concrete) with a tall stovepipe
-  const stone = cmat({ map: tex('stone'), color: '#a3a4a2', roughness: 0.95 }, 1.1);
+  const stone = cmat({ map: blockTex(), color: '#b0aea8', roughness: 0.95 }, 0.4);
   box(g, 1.25, 0.95, 0.9, stone, -0.5, 0, -2.6, { collide: false });
   box(g, 0.7, 0.42, 0.05, color('#1c1a18', 1), -0.5, 0.3, -2.13, { shadow: false });
   box(g, 1.4, 0.1, 1.0, color('#8d8b84', 0.9), -0.5, 0.95, -2.6);
@@ -675,8 +707,10 @@ function buildForest(S) {
     // the lot itself is more lightly treed than the surrounding bush, so it reads from the air
     const inLot = x > -27 && x < 39 && z > ROAD_Z + 3 && z < 24;
     if (inLot && hash(x * 5.1, z * 2.7) < 0.3) continue;
-    const r = hash(x, z * 1.3), h = hash(z, x * 0.7);
+    let r = hash(x, z * 1.3); const h = hash(z, x * 0.7);
     const o = { far };
+    const bank = x > -8 && x < 18 && z > 9.5 && z < 27;
+    if (bank) r = 0.36 + r * 0.36; // pines + birches only: open trunks, lake glimpses from the deck
     if (r < 0.36) spruce(S, x, z, 14 + h * 10, o);
     else if (r < 0.5) pine(S, x, z, 18 + h * 10, o);
     else if (r < 0.72) birch(S, x, z, 13 + h * 8, o);
@@ -684,13 +718,13 @@ function buildForest(S) {
     n++;
     if (!far && d < 45) addCollider(x - 0.25, x + 0.25, z - 0.25, z + 0.25, groundY(x, z) - 1, groundY(x, z) + 3);
     // understory at the forest edge so the clearing reads as a wall of green
-    if (d < 70 && cl > 0.02 && cl < 0.45 && !blocked(x + 1.5, z + 1.2) && clearing(x + 1.5, z + 1.2) < 0.5) shrub(S, x + 1.5, z + 1.2, 1.2 + h, hash(x, 3) < 0.5 ? '#557f35' : '#689a42', { n: 3, far, geo: far ? 'ico0' : 'ico1' });
+    if (d < 70 && !bank && cl > 0.02 && cl < 0.45 && !blocked(x + 1.5, z + 1.2) && clearing(x + 1.5, z + 1.2) < 0.5) shrub(S, x + 1.5, z + 1.2, 1.2 + h, hash(x, 3) < 0.5 ? '#557f35' : '#689a42', { n: 3, far, geo: far ? 'ico0' : 'ico1' });
   }
   // trees on the bank right below the lake-side deck so the balcony sits in the canopy (photo 15),
   // trunks open enough underneath to glimpse the lake
   for (const [x, z, k, h] of [[-3.5, 11.2, 'spruce', 17], [-0.5, 12.6, 'birch', 15], [2.2, 11.4, 'pine', 19], [4.8, 13.4, 'birch', 16],
-    [7.2, 11.2, 'maple', 13], [9.6, 12.6, 'pine', 20], [12.4, 11.0, 'spruce', 16], [-6.5, 9.5, 'spruce', 18], [14.6, 13.5, 'birch', 15],
-    [0.6, 15.5, 'spruce', 18], [6.2, 16.2, 'maple', 12], [-4, 16.5, 'pine', 21], [11.5, 16.8, 'spruce', 17], [3.5, 18.8, 'birch', 14],
+    [7.2, 11.2, 'birch', 17], [9.6, 12.6, 'pine', 20], [12.4, 11.0, 'spruce', 16], [-6.5, 9.5, 'spruce', 18], [14.6, 13.5, 'birch', 15],
+    [0.6, 15.5, 'pine', 20], [6.2, 16.2, 'birch', 16], [-4, 16.5, 'pine', 21], [11.5, 16.8, 'pine', 19], [3.5, 18.8, 'birch', 14],
     [15.5, 9.2, 'maple', 11], [-7.5, 5.5, 'birch', 16], [16.5, 4.5, 'spruce', 18], [17.8, 1.0, 'birch', 15]]) {
     ({ spruce, pine, birch, maple })[k](S, x, z, h);
   }

@@ -106,17 +106,17 @@ export function build(root) {
   framedArt(g, picture('sepia', 5), 0.3, 0.38, 0.17, 1.95, 5.72, 'e', '#1e1a16');
 
   // ---- by the bedroom door: maple cabinet + hurricane lamp, plant, gothic arch mirror ----
-  cabinet(g, 2.85, 3.3, 0, { w: 0.62, h: 0.75, d: 0.4, wood: '#b0702e' });
-  tableLamp(g, 2.85, 0.84, 3.3, { base: '#f0e6c8', shade: '#f6e8c4', h: 0.45, light: 0.6 });
-  plant(g, 2.3, 0, 3.4, { s: 1.5, pot: '#c07a52', leaf: '#5c8a45' });
-  const arch = group(g, 2.85, 3.12, 0, 1.15);
+  cabinet(g, 1.5, 3.3, 0, { w: 0.62, h: 0.75, d: 0.4, wood: '#b0702e' });
+  tableLamp(g, 1.5, 0.84, 3.3, { base: '#f0e6c8', shade: '#f6e8c4', h: 0.45, light: 0.6 });
+  plant(g, 0.85, 0, 3.4, { s: 1.5, pot: '#c07a52', leaf: '#5c8a45' });
+  const arch = group(g, 1.5, 3.12, 0, 1.15);
   const archWood = color('#8a4a22', 0.5);
   box(arch, 0.06, 0.95, 0.04, archWood, -0.23, 0, 0); box(arch, 0.06, 0.95, 0.04, archWood, 0.23, 0, 0);
   box(arch, 0.04, 0.95, 0.04, archWood, 0, 0, 0.01);
   box(arch, 0.52, 0.06, 0.04, archWood, 0, 0, 0);
   const archTop = new THREE.Mesh(new THREE.TorusGeometry(0.23, 0.03, 6, 20, Math.PI), archWood); archTop.position.set(0, 0.95, 0.02); arch.add(archTop);
   box(arch, 0.42, 0.9, 0.01, new THREE.MeshStandardMaterial({ color: '#b9c4c6', metalness: 1, roughness: 0.08 }), 0, 0.04, 0.025);
-  mirror(g, 2.25, 1.55, 3.12, 's', { w: 0.3, h: 0.36, frame: '#a8702e' });
+  mirror(g, 2.15, 1.55, 3.12, 's', { w: 0.3, h: 0.36, frame: '#a8702e' });
 
   // ---- small TV on a wrought-iron stand by the post, angled toward the sofa ----
   const tv = group(g, 4.3, 2.35, -1.0);

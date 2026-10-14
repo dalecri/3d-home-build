@@ -71,7 +71,7 @@ export function build(root) {
   cyl(g, 0.03, 0.03, 0.18, color('#e9d27a', 0.3, { transparent: true, opacity: 0.8 }), 9.45, 0.9, 1.75, 10);
 
   // ---- kitchen cart / island: grey base, butcher-block top, long axis north-south ----
-  const ix = 7.95, iz = 2.42;
+  const ix = 8.05, iz = 2.52;
   box(g, 0.5, 0.82, 0.55, color('#c3c7c1', 0.6), ix, 0.04, iz, { collide: true });
   box(g, 0.48, 0.04, 0.6, color('#5b5f59', 0.9), ix, 0, iz, { shadow: false });
   for (const sx of [-1, 1]) for (const sz of [-1, 1]) box(g, 0.03, 0.82, 0.03, color('#d3d6d0', 0.5), ix + sx * 0.245, 0.04, iz + sz * 0.265, { shadow: false });

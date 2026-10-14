@@ -28,7 +28,7 @@ export function build(root) {
 
   // ---- wood-framed mirror with a vertical divider (on the mirror wall, faces south) ----
   const mw = 1.0, mh = 0.7, mx = 5.75, my = 1.17;
-  const mm = new THREE.MeshStandardMaterial({ color: '#b9c4c4', roughness: 0.08, metalness: 0.9 });
+  const mm = new THREE.MeshStandardMaterial({ color: '#c3cbc6', roughness: 0.15, metalness: 0.35, emissive: '#5a605c', emissiveIntensity: 0.35 });
   const glass = new THREE.Mesh(new THREE.PlaneGeometry(mw, mh), mm);
   glass.position.set(mx, my + mh / 2, wallZ + 0.02); g.add(glass);
   box(g, mw + 0.08, 0.05, 0.04, wood, mx, my + mh, wallZ + 0.02, { shadow: false });
@@ -65,6 +65,8 @@ export function build(root) {
   disc(4.67, 1.85, 1.3, 0.11, '#2e3b2a', Math.PI / 2, '#3a2a1a');
   // round gilt plate on the kitchen-side post (faces south)
   disc(6.8, 1.68, 1.19, 0.11, '#d9cfa0');
+  // matching gilt plate on the dinette/den corner post (reads as the photo's right-hand post)
+  disc(6.8, 1.68, 3.09, 0.1, '#d9cfa0');
   // small plaque above the shelf
   disc(4.8, 1.75, wallZ + 0.01, 0.08, '#4a5f86', 0, '#3a2a1a');
 

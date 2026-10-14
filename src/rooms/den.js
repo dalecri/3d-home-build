@@ -88,7 +88,7 @@ export function build(root) {
   // One deeper bracketed mantel just above the insert (on the 45-degree face only), then three
   // thin terracotta ledges flush at the tops of the upper stone courses (top one a bit wider,
   // like a corbel). Return offsets are 0 so nothing runs past the sides of the breast.
-  const MANTEL_Y = 1.3, MANTEL_T = 0.05;
+  const MANTEL_Y = 1.35, MANTEL_T = 0.05;
   prism(g, [...offsetChain(face, [0, 0.2, 0]), [CX, CZ]], MANTEL_Y, MANTEL_Y + MANTEL_T, [wood, wood]);
   for (const [y, p] of [[1.6, 0.035], [1.84, 0.04], [2.08, 0.06]]) {
     prism(g, [...offsetChain(face, [0, p, 0]), [CX, CZ]], y, y + 0.035, [wood, wood], { shadow: false });

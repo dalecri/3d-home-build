@@ -52,9 +52,9 @@ export const OPEN = {
 export const VIEWS = {
   'living-east': { label: 'Living room → fireplace (photo 28)', pos: [0.95, 1.15, 3.85], look: [5.3, 0.8, 6.2], fov: 68 },
   'living-west': { label: 'Living room → sofa (photo 26)', pos: [6.8, 1.35, 3.95], look: [1.89, 1.18, 3.0], fov: 62 },
-  kitchen: { label: 'Kitchen → fireplace (photo 20)', pos: [7.95, 1.25, 1.60], look: [7.32, 1.25, 7.57], fov: 76 },
+  kitchen: { label: 'Kitchen → fireplace (photo 20)', pos: [8.30, 1.25, 1.20], look: [7.36, 1.25, 7.13], fov: 74 },
   dinette: { label: 'Dinette (photo 25)', pos: [6.78, 1.28, 4.65], look: [5.6, 1.0, 0.75], fov: 66 },
-  bedroom: { label: 'Bedroom (photo 30)', pos: [3.28, 1.25, 2.72], look: [0.63, 0.95, 1.0], fov: 62 },
+  bedroom: { label: 'Bedroom (photo 30)', pos: [3.28, 1.25, 2.72], look: [0.63, 0.95, 1.18], fov: 62 },
   // exterior vantage points
   // ground: true => y values are heights above the terrain at that point
   front: { label: 'Front from the driveway (photo 1)', pos: [7.2, 1.5, -12.8], look: [6.4, 1.6, 0], fov: 58, ground: true },
