@@ -38,8 +38,8 @@ function rugTex() {
   for (let x = 104; x < W - 100; x += 18) for (let y = 104; y < H - 100; y += 18) ctx.fillRect(x + ((y / 18) % 2) * 9, y, 3, 3);
   // corner spandrels (cream quarter-ovals with navy flecks)
   for (const [cx, cy] of [[92, 92], [W - 92, 92], [92, H - 92], [W - 92, H - 92]]) {
-    ctx.fillStyle = cream; ctx.beginPath(); ctx.ellipse(cx, cy, 120, 80, 0, 0, 7); ctx.fill();
-    ctx.fillStyle = navy; for (let i = 0; i < 40; i++) { const a = i * 0.7, r = 20 + (i * 37) % 80; ctx.fillRect(cx + Math.cos(a) * r, cy + Math.sin(a) * r * 0.66, 5, 5); }
+    ctx.fillStyle = cream; ctx.beginPath(); ctx.ellipse(cx, cy, 70, 48, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = navy; for (let i = 0; i < 40; i++) { const a = i * 0.7, r = 12 + (i * 37) % 50; ctx.fillRect(cx + Math.cos(a) * r, cy + Math.sin(a) * r * 0.66, 5, 5); }
   }
   ctx.fillStyle = teal; ctx.fillRect(0, 0, W, 28); ctx.fillRect(0, H - 28, W, 28); ctx.fillRect(0, 0, 28, H); ctx.fillRect(W - 28, 0, 28, H);
   // centre medallion
@@ -88,8 +88,8 @@ export function build(root) {
   sheer(g, 0.4, 1.0, wz, 2.3, { opacity: 0.82 });
   sheer(g, 3.75, 4.32, wz, 2.3, { opacity: 0.82 });
   box(g, 4.0, 0.025, 0.025, rod, 2.38, 2.29, wz, { shadow: false });
-  sheerWest(g, 5.3, 5.8, 2.3);
-  sheerWest(g, 3.95, 4.42, 2.3);
+  sheerWest(g, 5.42, 5.82, 2.3);
+  sheerWest(g, 3.94, 4.28, 2.3);
   box(g, 0.025, 0.025, 2.0, rod, 0.27, 2.29, 4.86, { shadow: false });
 
   // ---- SW corner: dark side table + S-curve lamp with tan drum shade ----
@@ -106,17 +106,17 @@ export function build(root) {
   framedArt(g, picture('sepia', 5), 0.3, 0.38, 0.17, 1.95, 5.72, 'e', '#1e1a16');
 
   // ---- by the bedroom door: maple cabinet + hurricane lamp, plant, gothic arch mirror ----
-  cabinet(g, 0.75, 3.3, 0, { w: 0.62, h: 0.75, d: 0.4, wood: '#b0702e' });
-  tableLamp(g, 0.75, 0.84, 3.3, { base: '#f0e6c8', shade: '#f6e8c4', h: 0.45, light: 0.6 });
-  plant(g, 1.3, 0, 3.35, { s: 1.5, pot: '#c07a52', leaf: '#5c8a45' });
-  const arch = group(g, 0.75, 3.12, 0, 1.15);
+  cabinet(g, 2.85, 3.3, 0, { w: 0.62, h: 0.75, d: 0.4, wood: '#b0702e' });
+  tableLamp(g, 2.85, 0.84, 3.3, { base: '#f0e6c8', shade: '#f6e8c4', h: 0.45, light: 0.6 });
+  plant(g, 2.3, 0, 3.4, { s: 1.5, pot: '#c07a52', leaf: '#5c8a45' });
+  const arch = group(g, 2.85, 3.12, 0, 1.15);
   const archWood = color('#8a4a22', 0.5);
   box(arch, 0.06, 0.95, 0.04, archWood, -0.23, 0, 0); box(arch, 0.06, 0.95, 0.04, archWood, 0.23, 0, 0);
   box(arch, 0.04, 0.95, 0.04, archWood, 0, 0, 0.01);
   box(arch, 0.52, 0.06, 0.04, archWood, 0, 0, 0);
   const archTop = new THREE.Mesh(new THREE.TorusGeometry(0.23, 0.03, 6, 20, Math.PI), archWood); archTop.position.set(0, 0.95, 0.02); arch.add(archTop);
   box(arch, 0.42, 0.9, 0.01, new THREE.MeshStandardMaterial({ color: '#b9c4c6', metalness: 1, roughness: 0.08 }), 0, 0.04, 0.025);
-  mirror(g, 1.45, 1.6, 3.12, 's', { w: 0.3, h: 0.36, frame: '#a8702e' });
+  mirror(g, 2.25, 1.55, 3.12, 's', { w: 0.3, h: 0.36, frame: '#a8702e' });
 
   // ---- small TV on a wrought-iron stand by the post, angled toward the sofa ----
   const tv = group(g, 4.3, 2.35, -1.0);

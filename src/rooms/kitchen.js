@@ -26,31 +26,28 @@ export function build(root) {
   box(g, 0.035, 0.05, z1 - z0 + 0.02, tileEdge, back - depth - 0.05, 0.85, (z0 + z1) / 2, { shadow: false }); // bullnose
   box(g, 0.02, 0.32, z1 - z0, splash, back - 0.01, 0.9, (z0 + z1) / 2, { shadow: false });
   const front = (w, h, y, z, m = cabDoor) => box(g, 0.02, h, w, m, fx - 0.01, y, z, { shadow: false });
-  // north end: plain double-door base (z 0.15..0.85)
-  for (const z of [0.33, 0.67]) { front(0.32, 0.74, 0.12, z); box(g, 0.02, 0.018, 0.1, mat('chrome'), fx - 0.03, 0.72, z + (z < 0.5 ? 0.1 : -0.1), { shadow: false }); }
-  // drawer stack (z 0.87..1.43): three drawers with bronze cup pulls
+  const bar = (z, y = 0.72) => box(g, 0.02, 0.018, 0.1, mat('chrome'), fx - 0.03, y, z, { shadow: false });
+  // north end (behind the photo camera): plain doors z 0.15..1.23
+  for (const z of [0.285, 0.555, 0.825, 1.095]) { front(0.25, 0.74, 0.12, z); bar(z + (Math.round(z * 100) % 2 ? -0.07 : 0.07)); }
+  // drawer stack (z 1.25..1.75): three drawers with bronze cup pulls
   const cup = (y, z) => {
     const p = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.07, 12, 1, true, 0, Math.PI), bronze);
     p.rotation.z = Math.PI / 2; p.rotation.y = Math.PI / 2; p.position.set(fx - 0.035, y, z); g.add(p);
     box(g, 0.02, 0.012, 0.09, bronze, fx - 0.03, y + 0.02, z, { shadow: false });
   };
-  for (const [y, h] of [[0.12, 0.26], [0.4, 0.22], [0.64, 0.2]]) { front(0.54, h, y, 1.15); cup(y + h * 0.6, 1.15); }
-  // sink base: pair of doors (z 1.45..2.07) with bar pulls near the top
-  for (const z of [1.61, 1.91]) {
-    front(0.29, 0.72, 0.12, z);
-    box(g, 0.02, 0.018, 0.1, mat('chrome'), fx - 0.03, 0.72, z + (z < 1.75 ? 0.08 : -0.08), { shadow: false });
-  }
-  // white dishwasher (z 2.09..2.69), slightly proud of the cabinets
-  box(g, 0.04, 0.8, 0.6, mat('appliance'), fx - 0.02, 0.06, 2.39, { shadow: false });
-  box(g, 0.05, 0.14, 0.58, color('#e4e4e2', 0.35), fx - 0.03, 0.7, 2.39, { shadow: false });
-  box(g, 0.02, 0.025, 0.4, color('#cfcfcf', 0.3, { metalness: 0.5 }), fx - 0.065, 0.66, 2.39, { shadow: false });
-  box(g, 0.02, 0.06, 0.6, color('#d7d7d5', 0.4), fx - 0.03, 0.04, 2.39, { shadow: false }); // kick plate
-  // narrow end cabinet
-  front(0.18, 0.74, 0.12, 2.8);
-  for (const z of [0.85, 1.44, 2.08, 2.7]) box(g, 0.025, 0.76, 0.012, seam, fx - 0.01, 0.1, z, { shadow: false });
+  for (const [y, h] of [[0.12, 0.26], [0.4, 0.22], [0.64, 0.2]]) { front(0.48, h, y, 1.5); cup(y + h * 0.6, 1.5); }
+  // sink base: pair of doors (z 1.77..2.25) with bar pulls near the top
+  for (const z of [1.89, 2.13]) { front(0.22, 0.72, 0.12, z); bar(z + (z < 2 ? 0.05 : -0.05)); }
+  // white dishwasher (z 2.27..2.87), slightly proud of the cabinets
+  const dz0 = 2.57;
+  box(g, 0.04, 0.8, 0.6, mat('appliance'), fx - 0.02, 0.06, dz0, { shadow: false });
+  box(g, 0.05, 0.14, 0.58, color('#e4e4e2', 0.35), fx - 0.03, 0.7, dz0, { shadow: false });
+  box(g, 0.02, 0.025, 0.4, color('#cfcfcf', 0.3, { metalness: 0.5 }), fx - 0.065, 0.66, dz0, { shadow: false });
+  box(g, 0.02, 0.06, 0.6, color('#d7d7d5', 0.4), fx - 0.03, 0.04, dz0, { shadow: false }); // kick plate
+  for (const z of [1.24, 1.76, 2.26]) box(g, 0.025, 0.76, 0.012, seam, fx - 0.01, 0.1, z, { shadow: false });
 
   // ---- double sink + pull-down faucet under the window ----
-  const sinkZ = 1.75;
+  const sinkZ = 2.0;
   box(g, 0.42, 0.012, 0.78, mat('steel'), 9.22, 0.895, sinkZ, { shadow: false });
   for (const dz of [-0.2, 0.2]) box(g, 0.34, 0.01, 0.34, color('#8d9093', 0.3, { metalness: 0.8 }), 9.22, 0.9, sinkZ + dz, { shadow: false });
   cyl(g, 0.018, 0.022, 0.3, mat('chrome'), 9.47, 0.9, sinkZ - 0.1, 10);
@@ -74,11 +71,11 @@ export function build(root) {
   cyl(g, 0.03, 0.03, 0.18, color('#e9d27a', 0.3, { transparent: true, opacity: 0.8 }), 9.45, 0.9, 1.75, 10);
 
   // ---- kitchen cart / island: grey base, butcher-block top, long axis north-south ----
-  const ix = 8.1, iz = 2.35;
-  box(g, 0.5, 0.82, 0.62, color('#c3c7c1', 0.6), ix, 0.04, iz, { collide: true });
+  const ix = 7.95, iz = 2.42;
+  box(g, 0.5, 0.82, 0.55, color('#c3c7c1', 0.6), ix, 0.04, iz, { collide: true });
   box(g, 0.48, 0.04, 0.6, color('#5b5f59', 0.9), ix, 0, iz, { shadow: false });
-  for (const sx of [-1, 1]) for (const sz of [-1, 1]) box(g, 0.03, 0.82, 0.03, color('#d3d6d0', 0.5), ix + sx * 0.245, 0.04, iz + sz * 0.3, { shadow: false });
-  box(g, 0.58, 0.05, 0.7, butcher, ix, 0.86, iz);
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) box(g, 0.03, 0.82, 0.03, color('#d3d6d0', 0.5), ix + sx * 0.245, 0.04, iz + sz * 0.265, { shadow: false });
+  box(g, 0.58, 0.05, 0.62, butcher, ix, 0.86, iz);
   // turned-wood bowl with bananas
   const bowl = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.17, 0.15, 28), color('#b8703a', 0.55));
   bowl.position.set(ix, 0.985, iz - 0.12); g.add(bowl);

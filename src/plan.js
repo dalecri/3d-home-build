@@ -42,7 +42,7 @@ export const OPEN = {
     { id: 'porchWin', a: 2.42, b: 2.88, y0: 1.15, y1: 2.05, type: 'window' }, // photo 20: glass beyond the valance window, no door
   ],
   bedroomDoor: { a: 2.05, b: 2.85, y0: 0, y1: 2.05 }, // on x = 3.4 wall
-  kitchenToDen: { a: 7.1, b: 8.1, y0: 0, y1: 2.12 }, // on z = 3.0 wall
+  kitchenToDen: { a: 6.9, b: 8.15, y0: 0, y1: 2.12 }, // photo 20: as wide as the den allows (den east wall x 8.2) // on z = 3.0 wall
   bathDoor: { a: 3.2, b: 3.95, y0: 0, y1: 2.03 }, // on x = 8.2 wall (north end: the den fireplace fills the SE corner)
   closetDoor: { a: 0.2, b: 0.95, y0: 0, y1: 2.03 }, // on x = 6.8 (closet tucked in the dinette corner, door faces the kitchen)
 };
@@ -51,10 +51,10 @@ export const OPEN = {
 // fov is vertical degrees; photos are ~3:2 wide-angle real-estate shots.
 export const VIEWS = {
   'living-east': { label: 'Living room → fireplace (photo 28)', pos: [0.95, 1.15, 3.85], look: [5.3, 0.8, 6.2], fov: 68 },
-  'living-west': { label: 'Living room → sofa (photo 26)', pos: [6.6, 1.35, 3.9], look: [1.82, 1.09, 2.44], fov: 70 },
-  kitchen: { label: 'Kitchen → fireplace (photo 20)', pos: [8.40, 1.25, 1.15], look: [7.36, 1.25, 7.06], fov: 76 },
+  'living-west': { label: 'Living room → sofa (photo 26)', pos: [6.8, 1.35, 3.95], look: [1.89, 1.18, 3.0], fov: 62 },
+  kitchen: { label: 'Kitchen → fireplace (photo 20)', pos: [7.95, 1.25, 1.60], look: [7.32, 1.25, 7.57], fov: 76 },
   dinette: { label: 'Dinette (photo 25)', pos: [6.78, 1.28, 4.65], look: [5.6, 1.0, 0.75], fov: 66 },
-  bedroom: { label: 'Bedroom (photo 30)', pos: [3.08, 1.22, 2.71], look: [0.63, 0.95, 1.0], fov: 60 },
+  bedroom: { label: 'Bedroom (photo 30)', pos: [3.28, 1.25, 2.72], look: [0.63, 0.95, 1.0], fov: 62 },
   // exterior vantage points
   // ground: true => y values are heights above the terrain at that point
   front: { label: 'Front from the driveway (photo 1)', pos: [7.2, 1.5, -12.8], look: [6.4, 1.6, 0], fov: 58, ground: true },
