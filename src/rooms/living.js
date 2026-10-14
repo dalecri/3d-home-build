@@ -1,45 +1,103 @@
 // Living room (photos 26 + 28): west end, lake side. Teal sofa under the west slider,
-// blue damask armchair, teal oriental rug, wood + amber-glass chandelier, olive wainscot.
+// blue damask armchair by the beam post, teal oriental rug, wood + amber-glass chandelier,
+// white grommet sheers, olive wainscot.
 import * as THREE from 'three';
-import { box, color, framedArt } from '../lib.js';
+import { box, cyl, color, framedArt } from '../lib.js';
 import { tex, picture } from '../textures.js';
 import { sofa, armchair, coffeeTable, rug, chandelier, sheer, plant, mirror, cabinet, tableLamp, group } from '../furniture.js';
 
+// Southwestern / Pendleton-style throw: bands of navy, rust, cream, teal, mustard.
+function throwTex() {
+  const c = document.createElement('canvas'); c.width = 256; c.height = 256; const ctx = c.getContext('2d');
+  const bands = ['#1f3557', '#e3d5b4', '#c4572c', '#2c8a8a', '#e3d5b4', '#d9a43a', '#1f3557', '#7fb2c8', '#c4572c', '#e3d5b4'];
+  bands.forEach((b, i) => { ctx.fillStyle = b; ctx.fillRect(0, i * 25.6, 256, 25.6); });
+  // stepped diamonds
+  for (let x = 0; x < 256; x += 64) for (const y of [64, 166]) {
+    ctx.fillStyle = '#f0e6cc'; ctx.beginPath(); ctx.moveTo(x + 32, y - 22); ctx.lineTo(x + 54, y); ctx.lineTo(x + 32, y + 22); ctx.lineTo(x + 10, y); ctx.fill();
+    ctx.fillStyle = '#1f3557'; ctx.beginPath(); ctx.moveTo(x + 32, y - 11); ctx.lineTo(x + 43, y); ctx.lineTo(x + 32, y + 11); ctx.lineTo(x + 21, y); ctx.fill();
+  }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+
+// Grommet sheer hung on the west wall (panel runs along z).
+function sheerWest(g, z0, z1, top) {
+  const m = sheer(g, 0, z1 - z0, 0, top, { side: 'e', opacity: 0.82 });
+  m.position.x = 0.27; m.position.z = (z0 + z1) / 2;
+  return m;
+}
+
 export function build(root) {
   const g = new THREE.Group(); g.name = 'living'; root.add(g);
-  rug(g, 2.15, 4.55, 0, 3.4, 2.4, tex('rug'));
-  sofa(g, 0.62, 4.95, Math.PI / 2, { len: 2.0, fabric: '#2f7471' });
-  // southwestern throw on the sofa
-  box(g, 0.75, 0.04, 1.3, color('#2f5c8a', 0.9), 0.6, 0.5, 5.0, { shadow: false });
-  armchair(g, 3.85, 5.15, -Math.PI / 2 - 0.35, { fabric: '#2d5d8f' });
-  armchair(g, 3.9, 3.85, -Math.PI / 2 + 0.25, { fabric: '#2d5d8f' });
-  coffeeTable(g, 1.75, 4.85, Math.PI / 2, { w: 1.45, d: 0.55 });
-  chandelier(g, 2.2, 4.55, 2.4);
-  // sheers on the big lake window + west slider
-  sheer(g, 0.45, 1.2, 5.78, 2.25, {}); sheer(g, 3.6, 4.3, 5.78, 2.25, {});
-  box(g, 4.0, 0.025, 0.025, color('#222', 0.4, { metalness: 0.6 }), 2.4, 2.24, 5.75, { shadow: false });
-  sheer(g, 4.2, 4.75, 0.24, 2.25, { side: 'e' }); sheer(g, 5.55, 5.95, 0.24, 2.25, { side: 'e' });
-  // side table + arc lamp by the window corner
-  box(g, 0.45, 0.6, 0.4, color('#3b2a1e', 0.6), 0.45, 0, 5.6);
-  tableLamp(g, 0.45, 0.6, 5.6, { base: '#2a2a2a', shade: '#f0d9b5', h: 0.6 });
-  // corner cabinet + hurricane lamp (north-west corner by the bedroom door)
-  cabinet(g, 0.55, 3.35, Math.PI / 2, { w: 0.6, h: 0.75, d: 0.4, wood: '#b0702e' });
-  tableLamp(g, 0.55, 0.84, 3.35, { base: '#f0e6c8', shade: '#f6e8c4', h: 0.45, light: 0.8 });
-  plant(g, 1.0, 0, 3.4, { s: 1.4, leaf: '#4d8a3c' });
-  // gothic arch mirror + round mirror + small frames on west wall
-  const arch = group(g, 0.17, 3.15, Math.PI / 2, 1.0);
-  box(arch, 0.5, 1.0, 0.04, color('#8a4a22', 0.5), 0, 0, 0);
-  box(arch, 0.4, 0.9, 0.01, new THREE.MeshStandardMaterial({ color: '#b9c4c6', metalness: 1, roughness: 0.08 }), 0, 0.04, 0.025);
-  mirror(g, 0.17, 1.55, 3.1, 'e', { w: 0.3, h: 0.3, frame: '#a87a3a' });
-  framedArt(g, picture('sepia', 2), 0.25, 0.32, 0.17, 1.9, 4.2, 'e', '#2b1d12');
-  framedArt(g, picture('sepia', 3), 0.25, 0.3, 0.17, 1.4, 4.2, 'e', '#2b1d12');
-  framedArt(g, picture('sepia', 4), 0.36, 0.3, 0.17, 1.95, 5.95, 'e', '#2b1d12');
-  // TV on a wrought-iron stand by the post (faces west)
-  const tv = group(g, 4.35, 1.3, -Math.PI / 2);
-  box(tv, 0.45, 0.75, 0.35, color('#2a2a2a', 0.5, { metalness: 0.5 }), 0, 0, 0);
-  box(tv, 0.95, 0.56, 0.05, color('#0c0c0c', 0.3), 0, 0.78, 0);
-  // wall hats + plate in the photo-28 corner (south wall, east of window)
-  const hat = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.03, 24), color('#b06a45', 0.8));
-  hat.rotation.x = Math.PI / 2; hat.position.set(4.42, 1.75, 5.83); g.add(hat);
+  const rod = color('#2a2622', 0.4, { metalness: 0.6 });
+
+  // ---- rug: teal field, cream/brown key border ----
+  rug(g, 2.45, 4.45, 0, 3.3, 2.5, tex('rug', { field: '#175a5c', border: '#9c8e6c', accent: '#2c3a46' }));
+
+  // ---- teal quilted sofa under the slider, with a southwestern throw + pillows ----
+  sofa(g, 0.6, 4.6, Math.PI / 2, { len: 2.0, fabric: '#2d6a67' });
+  const thr = new THREE.MeshStandardMaterial({ map: throwTex(), roughness: 0.95 });
+  box(g, 0.62, 0.035, 1.25, thr, 0.68, 0.51, 4.75, { shadow: false });
+  box(g, 0.035, 0.32, 1.25, thr, 0.99, 0.2, 4.75, { shadow: false }); // draped over the seat front
+  const pillow = (z, hex, rz) => { const p = box(g, 0.14, 0.34, 0.42, color(hex, 0.9), 0.42, 0.52, z); p.rotation.x = rz; };
+  pillow(5.35, '#c9a24a', -0.25);
+  pillow(3.85, '#a9bfc4', 0.25);
+
+  // ---- walnut coffee table parallel to the sofa ----
+  coffeeTable(g, 1.6, 4.6, Math.PI / 2, { w: 1.35, d: 0.5, h: 0.4, wood: '#7d4f2c' });
+
+  // ---- blue damask club chair by the beam post, angled toward the sofa ----
+  armchair(g, 4.05, 5.15, -3 * Math.PI / 4 + 0.35, { fabric: '#2b5682' });
+
+  // ---- chandelier: wood arms + amber tulip shades ----
+  chandelier(g, 2.1, 4.5, 2.4, { arms: 5, drop: 0.5, wood: '#8a4f24', glass: '#e2a85a' });
+
+  // ---- sheers: big lake window (both ends) + west slider (both sides) ----
+  const wz = 5.78;
+  sheer(g, 0.4, 1.0, wz, 2.3, { opacity: 0.82 });
+  sheer(g, 3.75, 4.32, wz, 2.3, { opacity: 0.82 });
+  box(g, 4.0, 0.025, 0.025, rod, 2.38, 2.29, wz, { shadow: false });
+  sheerWest(g, 5.3, 5.8, 2.3);
+  sheerWest(g, 3.95, 4.42, 2.3);
+  box(g, 0.025, 0.025, 2.0, rod, 0.27, 2.29, 4.86, { shadow: false });
+
+  // ---- SW corner: dark side table + S-curve lamp with tan drum shade ----
+  box(g, 0.42, 0.62, 0.4, color('#3a2a1e', 0.6), 0.4, 0, 5.6);
+  box(g, 0.38, 0.02, 0.36, color('#2a1d14', 0.6), 0.4, 0.2, 5.6);
+  const lampG = group(g, 0.4, 5.62, 0, 0.62);
+  cyl(lampG, 0.07, 0.08, 0.03, color('#1c1c1c', 0.4, { metalness: 0.6 }), 0, 0, 0);
+  const stem = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.012, 6, 20, Math.PI * 1.4), color('#1c1c1c', 0.4, { metalness: 0.6 }));
+  stem.position.set(0, 0.2, 0); stem.rotation.y = Math.PI / 2; lampG.add(stem);
+  cyl(lampG, 0.012, 0.012, 0.42, color('#1c1c1c', 0.4, { metalness: 0.6 }), 0, 0.03, 0, 6);
+  const shadeM = color('#e2b98a', 0.9, { emissive: new THREE.Color('#e2a86a'), emissiveIntensity: 0.5, side: THREE.DoubleSide });
+  const shade = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.2, 20, 1, true), shadeM); shade.position.y = 0.52; lampG.add(shade);
+  const ll = new THREE.PointLight('#ffd3a0', 0.9, 3.0, 1.8); ll.position.y = 0.5; lampG.add(ll);
+  framedArt(g, picture('sepia', 5), 0.3, 0.38, 0.17, 1.95, 5.72, 'e', '#1e1a16');
+
+  // ---- by the bedroom door: maple cabinet + hurricane lamp, plant, gothic arch mirror ----
+  cabinet(g, 0.75, 3.3, 0, { w: 0.62, h: 0.75, d: 0.4, wood: '#b0702e' });
+  tableLamp(g, 0.75, 0.84, 3.3, { base: '#f0e6c8', shade: '#f6e8c4', h: 0.45, light: 0.6 });
+  plant(g, 1.3, 0, 3.35, { s: 1.5, pot: '#c07a52', leaf: '#5c8a45' });
+  const arch = group(g, 0.75, 3.12, 0, 1.15);
+  const archWood = color('#8a4a22', 0.5);
+  box(arch, 0.06, 0.95, 0.04, archWood, -0.23, 0, 0); box(arch, 0.06, 0.95, 0.04, archWood, 0.23, 0, 0);
+  box(arch, 0.04, 0.95, 0.04, archWood, 0, 0, 0.01);
+  box(arch, 0.52, 0.06, 0.04, archWood, 0, 0, 0);
+  const archTop = new THREE.Mesh(new THREE.TorusGeometry(0.23, 0.03, 6, 20, Math.PI), archWood); archTop.position.set(0, 0.95, 0.02); arch.add(archTop);
+  box(arch, 0.42, 0.9, 0.01, new THREE.MeshStandardMaterial({ color: '#b9c4c6', metalness: 1, roughness: 0.08 }), 0, 0.04, 0.025);
+  mirror(g, 1.45, 1.6, 3.12, 's', { w: 0.3, h: 0.36, frame: '#a8702e' });
+
+  // ---- small TV on a wrought-iron stand by the post, angled toward the sofa ----
+  const tv = group(g, 4.3, 2.35, -1.0);
+  const iron = color('#1e1e1e', 0.5, { metalness: 0.5 });
+  for (const sx of [-0.13, 0.13]) for (const sz of [-0.12, 0.12]) box(tv, 0.02, 0.78, 0.02, iron, sx, 0, sz);
+  for (const y of [0.05, 0.4, 0.76]) box(tv, 0.3, 0.02, 0.28, iron, 0, y, 0);
+  box(tv, 0.12, 0.06, 0.12, iron, 0, 0.78, 0);
+  box(tv, 0.72, 0.44, 0.05, color('#0c0c0c', 0.3), 0, 0.86, 0);
+
+  // ---- photo-28 corner between the window and the beam post: cowboy hat + dark plate ----
+  const hat = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.02, 24), color('#b06a45', 0.8));
+  hat.rotation.x = Math.PI / 2; hat.position.set(4.4, 1.78, 5.83); g.add(hat);
+  const crown = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 8), color('#a35f3d', 0.8)); crown.scale.set(1, 1.1, 0.6); crown.position.set(4.4, 1.8, 5.81); g.add(crown);
+  const plate = new THREE.Mesh(new THREE.CircleGeometry(0.11, 24), color('#3a3632', 0.6)); plate.rotation.y = Math.PI; plate.position.set(4.4, 1.42, 5.83); g.add(plate);
   return g;
 }

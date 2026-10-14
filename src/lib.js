@@ -24,11 +24,11 @@ export const MATS = {
   hardwood: () => std({ map: tex('hardwood'), roughness: 0.38, metalness: 0.0 }, 1.6),
   wallSage: () => std({ map: tex('paint', { base: '#d6dbc3' }), roughness: 0.9 }, 2),
   wallWhite: () => std({ map: tex('paint', { base: '#e9eae6' }), roughness: 0.9 }, 2),
-  wallBedroom: () => std({ map: tex('paint', { base: '#e3e4df' }), roughness: 0.9 }, 2),
+  wallBedroom: () => std({ map: tex('paint', { base: '#d5d7d8' }), roughness: 0.9 }, 2),
   ceiling: () => std({ map: tex('ceiling'), roughness: 0.95 }, 1.22),
   olive: () => std({ color: '#5d6146', roughness: 0.7 }),
   oliveBoard: () => std({ map: tex('vboard', { base: '#62664a', boards: 6 }), roughness: 0.65 }, 0.9),
-  pineBoard: () => std({ map: tex('vboard', { base: '#c9a777', boards: 6, knots: true, seed: 7 }), roughness: 0.6 }, 0.85),
+  pineBoard: () => std({ map: tex('vboard', { base: '#ab9171', boards: 6, knots: true, seed: 7 }), roughness: 0.6 }, 0.85),
   pineTrim: () => std({ color: '#c49a68', roughness: 0.6 }),
   trimWhite: () => std({ color: '#f1f1ec', roughness: 0.6 }),
   doorGreen: () => std({ color: '#6f7a5c', roughness: 0.55 }),
@@ -140,14 +140,14 @@ export function wainscot(parent, axis, a0, a1, face, side, openings = [], o = {}
   const sgn = side === 's' || side === 'e' ? 1 : -1;
   const rects = wallRects(a0, a1, h, openings.map((p) => ({ ...p, y0: Math.min(p.y0, h + 0.01) }))).filter((r) => r.y0 === 0);
   for (const r of rects) {
-    const len = r.b - r.a, c = (r.a + r.b) / 2;
+    const len = r.b - r.a, c = (r.a + r.b) / 2, hh = Math.min(h, r.y1); // hh < h only under a low window sill
     if (axis === 'x') {
-      box(parent, len, h, 0.02, board, c, 0, face + sgn * 0.01, { shadow: false });
-      box(parent, len, 0.045, 0.045, cap, c, h, face + sgn * 0.022, { shadow: false });
+      box(parent, len, hh, 0.02, board, c, 0, face + sgn * 0.01, { shadow: false });
+      box(parent, len, 0.045, 0.045, cap, c, hh, face + sgn * 0.022, { shadow: false });
       box(parent, len, 0.1, 0.03, base, c, 0, face + sgn * 0.03, { shadow: false });
     } else {
-      box(parent, 0.02, h, len, board, face + sgn * 0.01, 0, c, { shadow: false });
-      box(parent, 0.045, 0.045, len, cap, face + sgn * 0.022, h, c, { shadow: false });
+      box(parent, 0.02, hh, len, board, face + sgn * 0.01, 0, c, { shadow: false });
+      box(parent, 0.045, 0.045, len, cap, face + sgn * 0.022, hh, c, { shadow: false });
       box(parent, 0.03, 0.1, len, base, face + sgn * 0.03, 0, c, { shadow: false });
     }
   }
