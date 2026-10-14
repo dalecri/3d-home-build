@@ -38,8 +38,8 @@ export const OPEN = {
   ],
   // kitchen east wall (to the screened porch) x = 9.6
   kitchenEast: [
-    { id: 'sinkWin', a: 0.35, b: 2.0, y0: 1.0, y1: 2.05, type: 'window' },
-    { id: 'porchWin', a: 2.15, b: 2.8, y0: 0.95, y1: 2.05, type: 'window' }, // photo 20: glass beyond the valance window, no door
+    { id: 'sinkWin', a: 1.0, b: 2.3, y0: 1.15, y1: 2.05, type: 'window' },
+    { id: 'porchWin', a: 2.42, b: 2.88, y0: 1.15, y1: 2.05, type: 'window' }, // photo 20: glass beyond the valance window, no door
   ],
   bedroomDoor: { a: 2.05, b: 2.85, y0: 0, y1: 2.05 }, // on x = 3.4 wall
   kitchenToDen: { a: 7.1, b: 8.1, y0: 0, y1: 2.12 }, // on z = 3.0 wall
@@ -50,10 +50,10 @@ export const OPEN = {
 // Camera vantage points matching each listing photo (used for photo-compare + critic screenshots).
 // fov is vertical degrees; photos are ~3:2 wide-angle real-estate shots.
 export const VIEWS = {
-  'living-east': { label: 'Living room → fireplace (photo 28)', pos: [1.05, 1.15, 3.85], look: [5.4, 0.8, 6.2], fov: 68 },
-  'living-west': { label: 'Living room → sofa (photo 26)', pos: [6.75, 1.35, 3.15], look: [1.79, 1.1, 2.54], fov: 74 },
-  kitchen: { label: 'Kitchen → fireplace (photo 20)', pos: [8.40, 1.20, 0.85], look: [7.46, 1.20, 6.78], fov: 70 },
-  dinette: { label: 'Dinette (photo 25)', pos: [6.75, 1.3, 4.7], look: [6.05, 1.02, 0.76], fov: 66 },
+  'living-east': { label: 'Living room → fireplace (photo 28)', pos: [0.95, 1.15, 3.85], look: [5.3, 0.8, 6.2], fov: 68 },
+  'living-west': { label: 'Living room → sofa (photo 26)', pos: [6.6, 1.35, 3.9], look: [1.82, 1.09, 2.44], fov: 70 },
+  kitchen: { label: 'Kitchen → fireplace (photo 20)', pos: [8.30, 1.20, 0.60], look: [7.26, 1.20, 6.51], fov: 72 },
+  dinette: { label: 'Dinette (photo 25)', pos: [6.75, 1.28, 4.3], look: [6.2, 1.0, 0.4], fov: 66 },
   bedroom: { label: 'Bedroom (photo 30)', pos: [3.08, 1.22, 2.71], look: [0.63, 0.95, 1.0], fov: 60 },
   // exterior vantage points
   // ground: true => y values are heights above the terrain at that point

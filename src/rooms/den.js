@@ -144,7 +144,7 @@ export function build(root) {
 
   // ---------- floor: sage shag rug in front of the slider, plant by the slider ----------
   const sl = OPEN.south.find((o) => o.id === 'denSlider');
-  rug(g, (sl.a + sl.b) / 2 + 0.15, 4.85, 0, 1.75, 1.15, tex('shag'));
+  rug(g, (sl.a + sl.b) / 2 + 0.25, 4.85, 0.06, 1.8, 1.15, tex('shag', { base: '#7b886f' }));
   plant(g, sl.a + 0.25, 0, CZ - 0.3, { s: 1.6 });
   return g;
 }

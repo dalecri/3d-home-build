@@ -8,8 +8,8 @@ import { plant } from '../furniture.js';
 
 export function build(root) {
   const g = new THREE.Group(); g.name = 'kitchen'; root.add(g);
-  const cab = color('#b4b9b1', 0.6);
-  const cabDoor = color('#bcc1b9', 0.55);
+  const cab = color('#a2a79f', 0.65);
+  const cabDoor = color('#adb2aa', 0.6);
   const seam = color('#6e736b', 0.8);
   const tile = new THREE.MeshStandardMaterial({ map: tex('tile', { base: '#a4583f' }), roughness: 0.45 }); tile.userData.tile = 0.3;
   const tileEdge = color('#8f4a35', 0.5);
@@ -59,14 +59,14 @@ export function build(root) {
 
   // ---- window valance: gathered cream sheer across the top of the sink window ----
   const sheer = color('#f3f1dc', 0.95, { side: THREE.DoubleSide });
-  box(g, 0.02, 0.02, 1.95, mat('chrome'), 9.5, 2.07, 1.17, { shadow: false }); // rod
-  for (let z = 0.25; z < 2.1; z += 0.07) {
-    const h = 0.42 + 0.06 * Math.sin(z * 9);
+  box(g, 0.02, 0.02, 1.45, mat('chrome'), 9.5, 2.07, 1.65, { shadow: false }); // rod
+  for (let z = 0.95; z < 2.36; z += 0.06) {
+    const h = 0.4 + 0.07 * Math.sin(z * 11);
     const pleat = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.04, h, 6, 1, true), sheer);
     pleat.position.set(9.47, 2.09 - h / 2, z); g.add(pleat);
   }
   // café curtain tier, short, at the near end only (photo 20 shows it at the left edge)
-  for (let z = 0.25; z < 0.8; z += 0.07) {
+  for (let z = 0.95; z < 1.4; z += 0.06) {
     const pleat = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.035, 0.5, 6, 1, true), sheer);
     pleat.position.set(9.48, 1.4, z); g.add(pleat);
   }

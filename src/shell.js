@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { W, D, T, t, CEIL, WALL_TOP, OPEN } from './plan.js';
 import { mat, box, wallX, wallZ, wainscot, casing, windowUnit, doorSlab, addCollider, walkables, color } from './lib.js';
+import { tex } from './textures.js';
 
 export function buildShell(root) {
   const g = new THREE.Group(); g.name = 'shell'; root.add(g);
@@ -66,8 +67,10 @@ export function buildShell(root) {
   wainscot(g, 'z', T, 1.55, 5.25, 'w', []);
   wainscot(g, 'z', 1.15, 1.55, 5.35, 'e', []);
   wainscot(g, 'x', 5.35, 6.8, 1.15, 's', []);
-  // kitchen side (dark olive half-wall on the kitchen/den partition)
-  wainscot(g, 'x', 6.85, 9.55, 2.95, 'n', [OPEN.kitchenToDen]);
+  // kitchen side (dark olive half-wall on the kitchen/den partition; photo 20 reads charcoal-olive)
+  const kBoard = new THREE.MeshStandardMaterial({ map: tex('vboard', { base: '#4e5243', boards: 6 }), roughness: 0.65 }); kBoard.userData.tile = 0.9;
+  const kOlive = color('#4f5346', 0.65);
+  wainscot(g, 'x', 6.85, 9.55, 2.95, 'n', [OPEN.kitchenToDen], { board: kBoard, cap: kOlive });
   // bedroom: knotty pine wainscot
   const pine = { board: 'pineBoard', cap: 'pineTrim', h: 0.95 };
   wainscot(g, 'z', T, 2.95, T, 'e', [], pine);
@@ -119,7 +122,7 @@ export function buildShell(root) {
   doorSlab(g, 3.31, bd.a, Math.PI / 2 + 0.12, 0.8, 2.03, 'doorGreen'); // swung open into the bedroom, resting near the east wall
   const kd = OPEN.kitchenToDen;
   casing(g, 'x', kd.a, kd.b, 0, kd.y1, 3.05, 's', 'olive');
-  casing(g, 'x', kd.a, kd.b, 0, kd.y1, 2.95, 'n', 'olive');
+  casing(g, 'x', kd.a, kd.b, 0, kd.y1, 2.95, 'n', kOlive, 0.11);
   const bdd = OPEN.bathDoor;
   casing(g, 'z', bdd.a, bdd.b, 0, bdd.y1, 8.15, 'w', 'olive');
   doorSlab(g, 8.25, bdd.a, -0.4, 0.75, 2.03, 'doorGreen'); // swings into the bath, clear of the den

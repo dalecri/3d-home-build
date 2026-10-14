@@ -19,6 +19,37 @@ function throwTex() {
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 }
 
+// Oriental rug (photos 26/28): deep teal field with cream pin-dots, small cream medallion,
+// cream key-pattern border band between teal bands.
+function rugTex() {
+  const W = 1024, H = 768;
+  const c = document.createElement('canvas'); c.width = W; c.height = H; const ctx = c.getContext('2d');
+  const teal = '#1b5e60', cream = '#cbbf9c', navy = '#24344a', rust = '#8a5a3a';
+  ctx.fillStyle = teal; ctx.fillRect(0, 0, W, H);
+  // cream border band with navy key/meander pattern
+  ctx.fillStyle = cream; ctx.fillRect(28, 28, W - 56, H - 56);
+  ctx.fillStyle = teal; ctx.fillRect(92, 92, W - 184, H - 184);
+  ctx.fillStyle = navy;
+  for (let x = 40; x < W - 40; x += 28) { ctx.fillRect(x, 44, 16, 6); ctx.fillRect(x + 10, 50, 6, 20); ctx.fillRect(x, H - 50, 16, 6); ctx.fillRect(x + 10, H - 70, 6, 20); }
+  for (let y = 40; y < H - 40; y += 28) { ctx.fillRect(44, y, 6, 16); ctx.fillRect(50, y + 10, 20, 6); ctx.fillRect(W - 50, y, 6, 16); ctx.fillRect(W - 70, y + 10, 20, 6); }
+  ctx.fillStyle = rust; ctx.fillRect(84, 84, W - 168, 4); ctx.fillRect(84, H - 88, W - 168, 4); ctx.fillRect(84, 84, 4, H - 168); ctx.fillRect(W - 88, 84, 4, H - 168);
+  // pin-dot field
+  ctx.fillStyle = 'rgba(214,204,170,0.8)';
+  for (let x = 104; x < W - 100; x += 18) for (let y = 104; y < H - 100; y += 18) ctx.fillRect(x + ((y / 18) % 2) * 9, y, 3, 3);
+  // corner spandrels (cream quarter-ovals with navy flecks)
+  for (const [cx, cy] of [[92, 92], [W - 92, 92], [92, H - 92], [W - 92, H - 92]]) {
+    ctx.fillStyle = cream; ctx.beginPath(); ctx.ellipse(cx, cy, 120, 80, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = navy; for (let i = 0; i < 40; i++) { const a = i * 0.7, r = 20 + (i * 37) % 80; ctx.fillRect(cx + Math.cos(a) * r, cy + Math.sin(a) * r * 0.66, 5, 5); }
+  }
+  ctx.fillStyle = teal; ctx.fillRect(0, 0, W, 28); ctx.fillRect(0, H - 28, W, 28); ctx.fillRect(0, 0, 28, H); ctx.fillRect(W - 28, 0, 28, H);
+  // centre medallion
+  ctx.fillStyle = cream; ctx.beginPath(); ctx.ellipse(W / 2, H / 2, 105, 70, 0, 0, 7); ctx.fill();
+  ctx.strokeStyle = navy; ctx.lineWidth = 6; ctx.beginPath(); ctx.ellipse(W / 2, H / 2, 92, 58, 0, 0, 7); ctx.stroke();
+  ctx.fillStyle = navy; for (let i = 0; i < 16; i++) { const a = i * Math.PI / 8; ctx.beginPath(); ctx.arc(W / 2 + Math.cos(a) * 55, H / 2 + Math.sin(a) * 34, 6, 0, 7); ctx.fill(); }
+  ctx.fillStyle = rust; ctx.beginPath(); ctx.ellipse(W / 2, H / 2, 22, 14, 0, 0, 7); ctx.fill();
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t;
+}
+
 // Grommet sheer hung on the west wall (panel runs along z).
 function sheerWest(g, z0, z1, top) {
   const m = sheer(g, 0, z1 - z0, 0, top, { side: 'e', opacity: 0.82 });
@@ -31,7 +62,7 @@ export function build(root) {
   const rod = color('#2a2622', 0.4, { metalness: 0.6 });
 
   // ---- rug: teal field, cream/brown key border ----
-  rug(g, 2.45, 4.45, 0, 3.3, 2.5, tex('rug', { field: '#175a5c', border: '#9c8e6c', accent: '#2c3a46' }));
+  rug(g, 2.45, 4.45, 0, 3.3, 2.5, rugTex());
 
   // ---- teal quilted sofa under the slider, with a southwestern throw + pillows ----
   sofa(g, 0.6, 4.6, Math.PI / 2, { len: 2.0, fabric: '#2d6a67' });
@@ -43,13 +74,14 @@ export function build(root) {
   pillow(3.85, '#a9bfc4', 0.25);
 
   // ---- walnut coffee table parallel to the sofa ----
-  coffeeTable(g, 1.6, 4.6, Math.PI / 2, { w: 1.35, d: 0.5, h: 0.4, wood: '#7d4f2c' });
+  coffeeTable(g, 1.65, 4.65, Math.PI / 2, { w: 1.35, d: 0.5, h: 0.4, wood: '#7d4f2c' });
 
   // ---- blue damask club chair by the beam post, angled toward the sofa ----
   armchair(g, 4.05, 5.15, -3 * Math.PI / 4 + 0.35, { fabric: '#2b5682' });
 
   // ---- chandelier: wood arms + amber tulip shades ----
-  chandelier(g, 2.1, 4.5, 2.4, { arms: 5, drop: 0.5, wood: '#8a4f24', glass: '#e2a85a' });
+  const ch = chandelier(g, 2.1, 4.5, 2.4, { arms: 5, drop: 0.5, wood: '#8a4f24', glass: '#d08a3c' });
+  ch.traverse((o) => { if (o.material && o.material.emissive && o.material.transparent) { o.material.emissiveIntensity = 0.35; o.scale.set(1.25, 1.3, 1.25); } });
 
   // ---- sheers: big lake window (both ends) + west slider (both sides) ----
   const wz = 5.78;

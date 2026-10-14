@@ -53,6 +53,21 @@ function hutch(parent, x, z) {
   return hb;
 }
 
+// Woven rattan cane for the nightstand drawer fronts.
+function caneMat() {
+  const c = document.createElement('canvas'); c.width = c.height = 64;
+  const x = c.getContext('2d');
+  x.fillStyle = '#b08a55'; x.fillRect(0, 0, 64, 64);
+  x.strokeStyle = 'rgba(70,45,20,0.55)'; x.lineWidth = 1.5;
+  for (let i = -64; i < 128; i += 8) {
+    x.beginPath(); x.moveTo(i, 0); x.lineTo(i + 64, 64); x.stroke();
+    x.beginPath(); x.moveTo(i + 64, 0); x.lineTo(i, 64); x.stroke();
+  }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace;
+  const m = new THREE.MeshStandardMaterial({ map: t, roughness: 0.9 }); m.userData.tile = 0.08;
+  return m;
+}
+
 export function build(root) {
   const g = new THREE.Group(); g.name = 'bedroom'; root.add(g);
   // bed: hutch headboard against the west wall, centred on z = bz
@@ -77,14 +92,19 @@ export function build(root) {
   rp.rotation.z = Math.PI / 2 - 0.35; rp.position.set(x0 + 0.42, 0.77, bz - 0.12); g.add(rp);
   // nightstands (rattan fronts) + ceramic lamps with pink shades
   const zl = bz + 1.0, zr = bz - 0.98; // left (south) and right (north) in the photo
-  nightstand(g, 0.38, zl, Math.PI / 2, { w: 0.48, h: 0.68, d: 0.42, drawers: 3, wood: '#9a5a28', front: '#a07a48' });
-  nightstand(g, 0.37, zr, Math.PI / 2, { w: 0.46, h: 0.55, d: 0.4, drawers: 2, wood: '#9a5a28', front: '#a07a48' });
+  const cane = caneMat();
+  for (const [z, o] of [[zl, { w: 0.48, h: 0.68, d: 0.42, drawers: 3 }], [zr, { w: 0.46, h: 0.55, d: 0.4, drawers: 2 }]]) {
+    const x = 0.17 + o.d / 2 + 0.02;
+    nightstand(g, x, z, Math.PI / 2, { ...o, wood: '#9a5a28', front: '#8a5a30' });
+    const dh = (o.h - 0.1) / o.drawers;
+    for (let i = 0; i < o.drawers; i++) box(g, 0.004, dh - 0.09, o.w - 0.16, cane, x + o.d / 2 + 0.006, 0.105 + i * dh, z, { shadow: false });
+  }
   tableLamp(g, 0.36, 0.72, zl, { base: '#e6d5b3', shade: '#d99482', h: 0.6, light: 0.45 });
   tableLamp(g, 0.36, 0.59, zr, { base: '#e6d5b3', shade: '#d99482', h: 0.55, light: 0.45 });
   // art: tropical sunset over the hutch, two pastel abstracts to its left, sepia prints
   framedArt(g, picture('tropical', 5), 1.06, 0.5, 0.17, 2.04, bz, 'e', '#6b4a2c', 0.07);
-  framedArt(g, picture('pastel', 6), 0.42, 0.42, 0.17, 2.16, bz + 1.2, 'e', '#1b1b1b', 0.06);
-  framedArt(g, picture('pastel', 7), 0.42, 0.42, 0.17, 1.66, bz + 1.2, 'e', '#1b1b1b', 0.06);
+  framedArt(g, picture('pastel', 6), 0.36, 0.42, 0.17, 2.08, bz + 1.08, 'e', '#1b1b1b', 0.06);
+  framedArt(g, picture('pastel', 7), 0.36, 0.42, 0.17, 1.6, bz + 1.08, 'e', '#1b1b1b', 0.06);
   framedArt(g, picture('sepia', 8), 0.32, 0.44, 0.17, 1.85, bz - 1.12, 'e', '#2b1d12', 0.05);
   framedArt(g, picture('sepia', 9), 0.38, 0.52, 0.72, 1.85, 0.17, 's', '#2b1d12', 0.05);
   // grey curtains on the north window (x 1.3..2.25)
