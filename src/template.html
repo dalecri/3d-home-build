@@ -11,6 +11,15 @@
   #app canvas { display: block; touch-action: none; }
   #overlay { position: fixed; inset: 0; display: grid; place-items: center; background: radial-gradient(ellipse at center, rgba(10,14,12,0.55), rgba(10,14,12,0.88)); z-index: 10; padding: 16px; }
   #overlay.hidden { display: none; }
+  #ascii { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); margin: 0; pointer-events: none; user-select: none; white-space: pre; font: clamp(8px, 1.65vw, 15px)/1.15 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; color: rgba(214, 226, 206, 0.38); z-index: 0; }
+  #ascii .st { color: #f4e3b0; animation: tw 3s ease-in-out infinite; }
+  #ascii .mn { color: rgba(244, 227, 176, 0.75); }
+  #ascii .wv { color: rgba(120, 170, 200, 0.55); }
+  #ascii .ct { color: var(--accent); opacity: 0.85; }
+  #ascii .lt { color: #ffd77a; text-shadow: 0 0 6px rgba(255, 200, 90, 0.8); }
+  @keyframes tw { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { #ascii .st { animation: none; opacity: 0.7; } }
+  .card { position: relative; z-index: 1; }
   .card { max-width: 520px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 24px; backdrop-filter: blur(8px); }
   .card h1 { margin: 0 0 4px; font-size: 22px; letter-spacing: 0.01em; }
   .card .sub { color: var(--muted); margin: 0 0 16px; }
@@ -54,7 +63,7 @@
 <div id="compare"><span>Listing photo</span><img id="compareImg" alt="Listing photo for this vantage point"></div>
 <div id="cross"></div>
 <div id="stick"><div id="knob"></div></div>
-<div id="overlay"><div class="card">
+<div id="overlay"><pre id="ascii" aria-hidden="true"></pre><div class="card">
   <h1>Labelle lake house · walkable model</h1>
   <p class="sub">Built from listing photos at 1 unit = 1 m. 12.5 × 6.0 m footprint, 4,023 m² waterfront lot.</p>
   <ul>
@@ -65,6 +74,60 @@
   </ul>
   <button id="enter">Walk in</button>
 </div></div>
+<script>
+(() => {
+  // Cozy ASCII lake scene for the start screen. Rows 12-15 are water; their ~ shift to look like ripples.
+  const rows = [
+    "   .          *               .                 .          .-.          .     ",
+    "        .              .              *                   (   )    *          ",
+    "  *            .                .            .             `-'           .    ",
+    "         .                *           (              .            *           ",
+    "     /\\                                )                                /\\    ",
+    "    /  \\     /\\                    ___|_|_______                /\\     /  \\   ",
+    "   /    \\   /  \\                  /             \\      /\\      /  \\   /    \\  ",
+    "  /      \\ /    \\                /               \\    /  \\    /    \\ /      \\ ",
+    " /        /      \\              /_________________\\  /    \\  /      /        \\",
+    "/________/________\\              | [#]   __   [#] | /______\\/______/__________",
+    "    ||       ||                  |      |  |      |   ||       ||        ||   ",
+    ",,,,||,,,,,,,||,,,,,,,,,,,,,,,,,,|______|__|______|,,,||,,,,,,,||,,,,,,,,||,,,",
+    "~~~~   ~~~~~    ~~~~   ~~~~    ~~~~   ~~~~  /\\_/\\  /\\_/\\  /\\_/\\  /\\_/\\   ~~~~ ",
+    "   ~~~~    ~~~~   _o_    ~~~~    ~~~~   ~ ( o.o )( ^.^ )( -.- )( o.o )  ~~~  ",
+    " ~~~   ~~~   \\____|_____/   ~~~    ~~~   ===\"====\"====\"====\"====\"====\"==~~~~ ",
+    "   ~~~~   ~~~~   ~~~~   ~~~~   ~~~~   ~~~~  ||    ~~~~    ~~~~   ||   ~~~~    ",
+  ];
+  const el = document.getElementById('ascii');
+  if (!el) return;
+  const esc = (c) => c === '<' ? '&lt;' : c === '>' ? '&gt;' : c === '&' ? '&amp;' : c;
+  let t = 0;
+  const paint = () => {
+    el.innerHTML = rows.map((r, y) => {
+      let out = '';
+      for (let x = 0; x < r.length; x++) {
+        let c = r[x];
+        if (y >= 12 && c === '~') { // ripple: drift wave marks sideways
+          const k = (x + (y % 2 ? t : -t)) % 9;
+          c = k === 0 || k === 5 ? ' ' : '~';
+          out += '<span class="wv">' + c + '</span>'; continue;
+        }
+        if (y < 4 && (c === '*' || c === '.') && !(x > 57 && x < 66)) {
+          out += '<span class="st" style="animation-delay:' + ((x * 7 + y * 13) % 30) / 10 + 's">' + c + '</span>'; continue;
+        }
+        if (y < 3 && x > 57 && x < 66 && c !== ' ') { out += '<span class="mn">' + esc(c) + '</span>'; continue; }
+        if (y === 9 && c === '#') { out += '<span class="lt">#</span>'; continue; }
+        if ((y === 12 || y === 13) && x >= 42 && x <= 71 && c !== ' ' && c !== '~') { out += '<span class="ct">' + esc(c) + '</span>'; continue; }
+        out += esc(c);
+      }
+      return out;
+    }).join('\n');
+  };
+  paint();
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const id = setInterval(() => {
+    if (document.getElementById('overlay').classList.contains('hidden')) return clearInterval(id);
+    t++; paint();
+  }, 450);
+})();
+</script>
 <script>window.__REFS = /*REFS*/{};</script>
 <script>/*BUNDLE*/</script>
 </body>
